@@ -77,12 +77,15 @@ def nowPlayingEmbed(metaData):
     return formatedEmbed
 
 def validChannelCheck(ctx):
-    if (botChannels.restrictVoiceChannels and ctx.message.author.voice.channel.id not in botChannels.allowedVoiceChannels):
-        response = 'Music playback not allowed in this voice channel'
-    elif (botChannels.restrictTextChannels and ctx.message.channel.id not in botChannels.allowedTextChannels):
-        response = 'Bot commands not allowed in this text channel'
-    else:
-        response = True
+    try:
+        if (botChannels.restrictVoiceChannels and ctx.message.author.voice.channel.id not in botChannels.allowedVoiceChannels):
+            response = 'Music playback not allowed in this voice channel'
+        elif (botChannels.restrictTextChannels and ctx.message.channel.id not in botChannels.allowedTextChannels):
+            response = 'Bot commands not allowed in this text channel'
+        else:
+            response = True
+    except:
+        response = 'User does not appear to be in a voice channel'
     return response
 
 @tasks.loop(seconds = 5)
