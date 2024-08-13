@@ -39,3 +39,7 @@ Thumbs.db
 # Private Files #
 #################
 private.py
+
+# Directories #
+###############
+ffmpeg-2021-11-22/
