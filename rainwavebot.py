@@ -15,7 +15,7 @@ from rainwaveclient import RainwaveClient
 #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #logging.basicConfig(level=logging.DEBUG)
-rainwaveLogo = discord.File("data/rainwavelogoorangecropped.png", filename="rainwavelogoorangecropped.png")
+
 ffmpegLocation = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
 dataLocation = "data/"
 
@@ -52,6 +52,7 @@ async def postCurrentlyListening():
             newMetaData = fetchMetaData()
             if (current.playing is None
                 or current.playing.id != newMetaData.id):
+                rainwaveLogo = discord.File("data/rainwavelogoorangecropped.png", filename="rainwavelogoorangecropped.png")
                 await bot.get_channel(882671679938109530).send(file=rainwaveLogo, embed=nowPlayingEmbed(newMetaData))
                 current.playing = newMetaData
                 print('')
@@ -68,7 +69,6 @@ def nowPlayingEmbed(metaData):
         artistData = f"[{metaData.artist_string}]({metaData.url})"
     else:
         artistData = metaData.artist_string
-    
     embed.add_field(name=f"{metaData.title} ", value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
     embed.set_thumbnail(url=metaData.album.art)
     embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://rainwavelogoorangecropped.png")
