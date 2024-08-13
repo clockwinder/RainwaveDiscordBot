@@ -8,10 +8,11 @@ import aiocron
 from discord.ext import commands
 from discord.ext import tasks
 from datetime import datetime
-from private.config import token
-from private.config import rwID
-from private.config import rwKey
-from rainwaveclient import RainwaveClient #How to upgrade the rainwaveclient api: pip install -U python-rainwave-client
+from private.private import token
+from private.private import rwID
+from private.private import rwKey
+from rainwaveclient import RainwaveClient 
+#Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #logging.basicConfig(level=logging.DEBUG)
 
