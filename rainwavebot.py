@@ -61,7 +61,7 @@ async def postCurrentlyListening():
                 print('.', end ="")
     except:
         print("waiting on thread start")
-            
+
 def nowPlayingEmbed(metaData):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
@@ -79,14 +79,12 @@ def nowPlayingEmbed(metaData):
 def validChannelCheck(ctx):
     if (botChannels.restrictVoiceChannels and ctx.message.author.voice.channel.id not in botChannels.allowedVoiceChannels):
         response = 'Music playback not allowed in this channel'
-        print(response)
-        return False
     elif (botChannels.restrictTextChannels and ctx.message.channel.id not in botChannels.allowedTextChannels):
         response = 'Bot commands not allowed in this text channel'
-        print(response)
-        return False
     else:
-        return True
+        response = True
+    print(response)
+    return response
 
 @tasks.loop(seconds = 5)
 async def updatePlaying():
@@ -106,8 +104,11 @@ async def on_ready():
 async def play(ctx, station = 'help'):
     """`rw.play <channel name>` to start radio"""
     channelList = getChannelList()
-    if validChannelCheck(ctx):
+    isValidChannel = validChannelCheck(ctx)
+    if isValidChannel == True:
         print ('valid channel')
+    else:
+        await ctx.message.channel.send(isValidChannel)
     if station.lower() in channelList:
         stationNumber = channelList.index(station.lower())
         userChannel = ctx.message.author.voice.channel
