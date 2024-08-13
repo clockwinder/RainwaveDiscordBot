@@ -52,8 +52,8 @@ async def postCurrentlyListening():
             newMetaData = fetchMetaData()
             if (current.playing is None
                 or current.playing.id != newMetaData.id):
-                rainwaveLogo = discord.File("data/rainwavelogoorangecropped.png", filename="rainwavelogoorangecropped.png")
-                await bot.get_channel(882671679938109530).send(file=rainwaveLogo, embed=nowPlayingEmbed(newMetaData))
+                tempEmbed = nowPlayingEmbed(newMetaData)
+                await bot.get_channel(882671679938109530).send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
                 current.playing = newMetaData
                 print('')
                 print(f"{current.playing} // {current.playing.id}", end ="")
@@ -63,16 +63,18 @@ async def postCurrentlyListening():
         print("waiting on thread start")
             
 def nowPlayingEmbed(metaData):
-    syncThreadStatus = current.selectedStream._sync_thread.is_alive()
-    embed = discord.Embed(title="Now playing on Rainwave " + metaData.album.channel.name + " Radio", url=current.selectedStream.url, description=f"Progress bar here - {metaData.length} seconds")
-    if metaData.url:
-        artistData = f"[{metaData.artist_string}]({metaData.url})"
-    else:
-        artistData = metaData.artist_string
-    embed.add_field(name=f"{metaData.title} ", value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
-    embed.set_thumbnail(url=metaData.album.art)
-    embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://rainwavelogoorangecropped.png")
-    return embed
+    class formatedEmbed:
+        syncThreadStatus = current.selectedStream._sync_thread.is_alive()
+        rainwaveLogo = discord.File("data/rainwavelogoorangecropped.png", filename="rainwavelogoorangecropped.png")
+        embed = discord.Embed(title="Now playing on Rainwave " + metaData.album.channel.name + " Radio", url=current.selectedStream.url, description=f"Progress bar here - {metaData.length} seconds")
+        if metaData.url:
+            artistData = f"[{metaData.artist_string}]({metaData.url})"
+        else:
+            artistData = metaData.artist_string
+        embed.add_field(name=f"{metaData.title} ", value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
+        embed.set_thumbnail(url=metaData.album.art)
+        embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://rainwavelogoorangecropped.png")
+    return formatedEmbed
 
 @tasks.loop(seconds = 5)
 async def updatePlaying():
