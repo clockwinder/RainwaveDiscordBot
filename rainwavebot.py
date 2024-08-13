@@ -65,7 +65,7 @@ async def postCurrentlyListening():
 def nowPlayingEmbed(metaData):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
-        rainwaveLogo = discord.File("data/rainwavelogoorangecropped.png", filename="rainwavelogoorangecropped.png")
+        rainwaveLogo = discord.File("data/logo.png", filename="logo.png")
         embed = discord.Embed(title="Now playing on Rainwave " + metaData.album.channel.name + " Radio", url=current.selectedStream.url, description=f"Progress bar here - {metaData.length} seconds")
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
@@ -73,7 +73,7 @@ def nowPlayingEmbed(metaData):
             artistData = metaData.artist_string
         embed.add_field(name=f"{metaData.title} ", value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
         embed.set_thumbnail(url=metaData.album.art)
-        embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://rainwavelogoorangecropped.png")
+        embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://logo.png")
     return formatedEmbed
 
 @tasks.loop(seconds = 5)
