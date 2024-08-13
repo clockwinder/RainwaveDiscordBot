@@ -43,3 +43,7 @@ private.py
 # Directories #
 ###############
 ffmpeg-2021-11-22/
+
+# Cached Files #
+################
+*.pyc
