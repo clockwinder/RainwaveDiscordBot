@@ -118,7 +118,7 @@ async def play(ctx, station = 'help'):
                 if current.selectedStream != newSelectedStream: #If already connected and new stream is selected, restart stream
                     current.voiceChannel.stop()
                     current.selectedStream.stop_sync()
-                    current.selectedStream = newSelectedStream
+            current.selectedStream = newSelectedStream
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
