@@ -12,7 +12,8 @@ from data.config import botChannels
 from private.private import token
 from private.private import rwID
 from private.private import rwKey
-from private.private import textChannel 
+from private.private import musicChannel 
+from private.private import logChannel 
 from private.private import ffmpegLocation
 from private.private import opusLocation
 from rainwaveclient import RainwaveClient #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
@@ -55,7 +56,7 @@ async def postCurrentlyListening():
             if (current.playing is None
                 or current.playing.id != newMetaData.id):
                 tempEmbed = nowPlayingEmbed(newMetaData)
-                await bot.get_channel(textChannel).send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
+                await bot.get_channel(musicChannel).send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
                 current.playing = newMetaData
                 print('')
                 print(f"{current.playing} // {current.playing.id}", end ="")
@@ -100,7 +101,7 @@ async def on_ready():
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
     print('We have logged in as {0.user}'.format(bot) + ' at ' + current_time + ' on ' + current_day)
-    logChannel = bot.get_channel(textChannel)
+    logChannel = bot.get_channel(logChannel)
     await logChannel.send('I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 

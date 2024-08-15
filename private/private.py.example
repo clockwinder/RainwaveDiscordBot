@@ -1,7 +1,8 @@
 token = 0 #Discord bot token
 rwID = 0 #Rainwave API ID
 rwKey = 0 #Rainwave API Key
-textChannel = 0 #Discord channel you want to post messages to
+musicChannel = 0 #Discord channel you want to post music message text info to
+logChannel = 0 #Discord channel you want to post log messages to 
 ffmpegLocation = /path/to/ffmpegLocation #Change this to your path of ffmpeg 
 opusLocation = /path/to/opusLocation #You might need to define this if you are using macos. E.g. - /opt/homebrew/Cellar/opus/1.5.2/lib/libopus.0.dylib
 
