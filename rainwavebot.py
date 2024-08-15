@@ -8,6 +8,7 @@ import aiocron
 from discord.ext import commands
 from discord.ext import tasks
 from datetime import datetime
+from data.config import botChannels
 from private.private import token
 from private.private import rwID
 from private.private import rwKey
@@ -17,7 +18,6 @@ from rainwaveclient import RainwaveClient
 #logging.basicConfig(level=logging.DEBUG)
 
 ffmpegLocation = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
-dataLocation = "data/"
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -61,7 +61,7 @@ async def postCurrentlyListening():
                 print('.', end ="")
     except:
         print("waiting on thread start")
-            
+
 def nowPlayingEmbed(metaData):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
@@ -75,6 +75,18 @@ def nowPlayingEmbed(metaData):
         embed.set_thumbnail(url=metaData.album.art)
         embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://logo.png")
     return formatedEmbed
+
+def validChannelCheck(ctx):
+    try:
+        if (botChannels.restrictVoiceChannels and ctx.message.author.voice.channel.id not in botChannels.allowedVoiceChannels):
+            response = 'Music playback not allowed in this voice channel'
+        elif (botChannels.restrictTextChannels and ctx.message.channel.id not in botChannels.allowedTextChannels):
+            response = 'Bot commands not allowed in this text channel'
+        else:
+            response = True
+    except:
+        response = 'User does not appear to be in a voice channel'
+    return response
 
 @tasks.loop(seconds = 5)
 async def updatePlaying():
@@ -93,31 +105,36 @@ async def on_ready():
 @bot.command(aliases=['p'])
 async def play(ctx, station = 'help'):
     """`rw.play <channel name>` to start radio"""
-    channelList = getChannelList()   
-    if station.lower() in channelList:
-        stationNumber = channelList.index(station.lower())
-        userChannel = ctx.message.author.voice.channel
-        newSelectedStream = rainwaveClient.channels[stationNumber]
-        try:
-            current.voiceChannel = await userChannel.connect()
-        except:
-            if current.selectedStream != newSelectedStream:
-                current.voiceChannel.stop()
-                current.selectedStream.stop_sync()
-        current.selectedStream = newSelectedStream
-        if current.voiceChannel.is_playing():
-            await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
+    isValidChannel = validChannelCheck(ctx)
+    if isValidChannel == True:
+        channelList = getChannelList()
+        if station.lower() in channelList:
+            stationNumber = channelList.index(station.lower())
+            userChannel = ctx.message.author.voice.channel
+            newSelectedStream = rainwaveClient.channels[stationNumber]
+            try:
+                current.voiceChannel = await userChannel.connect() #connect to channel
+            except:
+                if current.selectedStream != newSelectedStream: #If already connected and new stream is selected, restart stream
+                    current.voiceChannel.stop()
+                    current.selectedStream.stop_sync()
+            current.selectedStream = newSelectedStream
+            if current.voiceChannel.is_playing():
+                await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
+            else:
+                current.voiceChannel.play(discord.FFmpegPCMAudio(executable=ffmpegLocation, source=current.selectedStream.mp3_stream))
+                current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
+                updatePlaying.start()  
+        elif (station.lower() == 'help' or 'list'):
+            await ctx.send(f"available channels: {channelList}")
         else:
-            current.voiceChannel.play(discord.FFmpegPCMAudio(executable=ffmpegLocation, source=current.selectedStream.mp3_stream)) #If you need to define executable location, add executable=ffmpegLocation,
-            current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
-            updatePlaying.start()
-        
-    elif (station.lower() == 'help' or 'list'):
-        await ctx.send(f"available channels: {channelList}")
+            await ctx.send("Station not found, use `rw.help` for more info")
+            print(station)
     else:
-        await ctx.send("Station not found, use `rw.help` for more info")
-        print(station)
+        await ctx.message.channel.send(isValidChannel)
+        print(isValidChannel)
+    
 
 @bot.command(aliases=['leave','s']) ##, 'stop'
 async def stop(ctx):
