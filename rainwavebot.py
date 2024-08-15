@@ -12,12 +12,15 @@ from data.config import botChannels
 from private.private import token
 from private.private import rwID
 from private.private import rwKey
-from rainwaveclient import RainwaveClient 
-#Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
+from private.private import textChannel 
+from private.private import ffmpegLocation
+from rainwaveclient import RainwaveClient #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #logging.basicConfig(level=logging.DEBUG)
 
-ffmpegLocation = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
+if not discord.opus.is_loaded():
+    discord.opus.load_opus('/opt/homebrew/Cellar/opus/1.5.2/lib/libopus.0.dylib')
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -26,8 +29,6 @@ intents.members = True
 rainwaveClient = RainwaveClient()
 rainwaveClient.user_id = rwID
 rainwaveClient.key = rwKey
-
-#print(rainwaveClient)
 
 bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
 
@@ -53,7 +54,7 @@ async def postCurrentlyListening():
             if (current.playing is None
                 or current.playing.id != newMetaData.id):
                 tempEmbed = nowPlayingEmbed(newMetaData)
-                await bot.get_channel(882671679938109530).send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
+                await bot.get_channel(textChannel).send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
                 current.playing = newMetaData
                 print('')
                 print(f"{current.playing} // {current.playing.id}", end ="")
@@ -98,7 +99,7 @@ async def on_ready():
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
     print('We have logged in as {0.user}'.format(bot) + ' at ' + current_time + ' on ' + current_day)
-    logChannel = bot.get_channel(855136017233608744)
+    logChannel = bot.get_channel(textChannel)
     await logChannel.send('I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 

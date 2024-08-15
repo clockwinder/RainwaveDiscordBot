@@ -1,3 +1,13 @@
 token = 0 #Discord bot token
 rwID = 0 #Rainwave API ID
 rwKey = 0 #Rainwave API Key
+textChannel = 0 #Discord channel you want to post messages to
+ffmpegLocation = /path/to/ffmpegLocation #Change this to your path of ffmpeg 
+opusLocation = /path/to/opusLocation #You might need to define this if you are using macos. E.g. - /opt/homebrew/Cellar/opus/1.5.2/lib/libopus.0.dylib
+
+# Uncomment this and add your channels IDs you want to restrict too
+# def override_botChannels(botChannels):
+#     botChannels.restrictVoiceChannels = True
+#     botChannels.allowedVoiceChannels = [123456789012345678, 987654321098765432]
+#     botChannels.restrictTextChannels = True
+#     botChannels.allowedTextChannels = [112233445566778899, 998877665544332211]
