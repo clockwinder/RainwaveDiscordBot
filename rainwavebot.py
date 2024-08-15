@@ -46,21 +46,22 @@ def getChannelList():
         tempArray.append(entries.key)
     return tempArray
 
-async def postCurrentlyListening():
-    try:
-        if current.selectedStream._sync_thread.is_alive():
-            newMetaData = fetchMetaData()
-            if (current.playing is None
-                or current.playing.id != newMetaData.id):
-                tempEmbed = nowPlayingEmbed(newMetaData)
-                await bot.get_channel(882671679938109530).send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-                current.playing = newMetaData
-                print('')
-                print(f"{current.playing} // {current.playing.id}", end ="")
+async def postCurrentlyListening(ctx = None):
+
+    if current.selectedStream._sync_thread.is_alive():
+        newMetaData = fetchMetaData()
+        if (current.playing is None
+            or current.playing.id != newMetaData.id):
+            tempEmbed = nowPlayingEmbed(newMetaData)
+            if ctx != None:
+                current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
             else:
-                print('.', end ="")
-    except:
-        print("waiting on thread start")
+                await current.message.edit(embed=tempEmbed.embed)
+            current.playing = newMetaData
+            print('')
+            print(f"{current.playing} // {current.playing.id}", end ="")
+        else:
+            print('.', end ="")
 
 def nowPlayingEmbed(metaData):
     class formatedEmbed:
@@ -118,6 +119,7 @@ async def play(ctx, station = 'help'):
                 if current.selectedStream != newSelectedStream: #If already connected and new stream is selected, restart stream
                     current.voiceChannel.stop()
                     current.selectedStream.stop_sync()
+                    updatePlaying.stop()
             current.selectedStream = newSelectedStream
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
@@ -125,6 +127,7 @@ async def play(ctx, station = 'help'):
                 current.voiceChannel.play(discord.FFmpegPCMAudio(executable=ffmpegLocation, source=current.selectedStream.mp3_stream))
                 current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
+                await postCurrentlyListening(ctx)
                 updatePlaying.start()  
         elif (station.lower() == 'help' or 'list'):
             await ctx.send(f"available channels: {channelList}")
@@ -142,6 +145,7 @@ async def stop(ctx):
     updatePlaying.stop()
     current.selectedStream.stop_sync()
     current.voiceChannel.stop()
+    current.message = None
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
@@ -152,7 +156,13 @@ async def whatson(ctx, station = None):
 
 @bot.command()
 async def test(ctx):
-    print(fetchMetaData())
+    nowPlayingMessage = await ctx.send("1")
+    time.sleep(3)
+    await nowPlayingMessage.edit(content="2")
+    time.sleep(3)
+    await nowPlayingMessage.edit(content="3")
+    time.sleep(3)
+    await nowPlayingMessage.edit(content="4")
 
 @bot.command()
 async def check(ctx):
