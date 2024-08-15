@@ -171,13 +171,7 @@ async def whatson(ctx, station = None):
 
 @bot.command()
 async def test(ctx):
-    nowPlayingMessage = await ctx.send("1")
-    time.sleep(3)
-    await nowPlayingMessage.edit(content="2")
-    time.sleep(3)
-    await nowPlayingMessage.edit(content="3")
-    time.sleep(3)
-    await nowPlayingMessage.edit(content="4")
+    print('test')
 
 @bot.command()
 async def check(ctx):
