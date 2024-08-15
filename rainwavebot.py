@@ -14,12 +14,13 @@ from private.private import rwID
 from private.private import rwKey
 from private.private import textChannel 
 from private.private import ffmpegLocation
+from private.private import opusLocation
 from rainwaveclient import RainwaveClient #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #logging.basicConfig(level=logging.DEBUG)
 
 if not discord.opus.is_loaded():
-    discord.opus.load_opus('/opt/homebrew/Cellar/opus/1.5.2/lib/libopus.0.dylib')
+    discord.opus.load_opus(opusLocation)
 
 
 intents = discord.Intents.default()
