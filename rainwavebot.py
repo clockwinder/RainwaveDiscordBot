@@ -100,7 +100,7 @@ def validChannelCheck(ctx):
     return response
 
 async def stopUpdates():
-    updatePlaying.stop()
+    updatePlaying.cancel()
     await postCurrentlyListening(stopping=True)
     current.selectedStream.stop_sync()
     current.voiceChannel.stop()
