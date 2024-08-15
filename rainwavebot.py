@@ -99,14 +99,14 @@ def validChannelCheck(ctx):
         response = 'User does not appear to be in a voice channel'
     return response
 
-async def restartUpdates():
+async def stopUpdates():
     updatePlaying.stop()
     await postCurrentlyListening(stopping=True)
     current.selectedStream.stop_sync()
     current.voiceChannel.stop()
     current.message = None
 
-async def stopUpdates():
+async def stopConnection():
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
@@ -138,7 +138,7 @@ async def play(ctx, station = 'help'):
                 current.voiceChannel = await userChannel.connect() #connect to channel
             except:
                 if current.selectedStream != newSelectedStream: #If already connected and new stream is selected, restart stream
-                    await restartUpdates()
+                    await stopUpdates()
             current.selectedStream = newSelectedStream
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
@@ -161,8 +161,8 @@ async def play(ctx, station = 'help'):
 @bot.command(aliases=['leave','s']) ##, 'stop'
 async def stop(ctx):
     """Stops radio"""
-    await restartUpdates()
     await stopUpdates()
+    await stopConnection()
 
 @bot.command(aliases=['wo'])
 async def whatson(ctx, station = None):
