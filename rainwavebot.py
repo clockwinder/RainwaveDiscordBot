@@ -66,8 +66,8 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             print(f"{current.playing} // {current.playing.id}", end ="")
         else:
             print('.', end ="")
-    except:
-        print("Not Syncing")
+    except Exception as returnedException:
+        print(f"postCurrentlyListening error: {returnedException}")
 
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
