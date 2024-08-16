@@ -119,8 +119,6 @@ async def on_ready():
     now = datetime.now()
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
-    rainwaveClient.user_id
-    loginReport = 'I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`'
     loginReport = f'Logged in as `{bot.user} (ID: {bot.user.id})` and `Rainwave (ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     print(loginReport)
     if botChannels.enableLogChannel:
