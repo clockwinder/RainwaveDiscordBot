@@ -119,7 +119,7 @@ async def on_ready():
     now = datetime.now()
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
-    loginReport = f'Logged in as `{bot.user} (ID: {bot.user.id})` and `Rainwave (ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
+    loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     print(loginReport)
     if botChannels.enableLogChannel:
         await bot.get_channel(botChannels.logChannel).send(loginReport)
