@@ -11,3 +11,16 @@ class botChannels:
     enableLogChannel = False
     #If above is set to true, list your logging channel ID below
     logChannel = 246813579024681357
+
+class private:
+    #Discord bot token
+    dicordBotToken = 'iV7B9T0d3hikb331nmGsvgHPGAv8jwFV3gKFs9eRonF4lgje68ZdrEX9aSJ'
+    #Rainwave API ID
+    rainwaveID = 12345
+    #Rainwave API Key
+    rainwaveKey = '12345abcde'
+    
+class dependencies:
+    #Location of FFMPEG file
+    ffmpeg = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
+    #Opus info here
