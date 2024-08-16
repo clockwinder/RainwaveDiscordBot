@@ -1,0 +1,13 @@
+class botChannels:
+    #To restrict which voice channels the bot can use, set below to true.
+    restrictVoiceChannels = False
+    #If above is set to true, list allowed channel/s IDs as shown below.
+    allowedVoiceChannels = [123456789012345678, 987654321098765432]
+    #To restrict which test channels the bot can receive commands on, set below to true.
+    restrictTextChannels = False
+    #If above is set to true, list allowed channel/s IDs as shown below.
+    allowedTextChannels = [112233445566778899, 998877665544332211]
+    #If you want the bot to log, login and error info in a channel, set below to True
+    enableLogChannel = False
+    #If above is set to true, list your logging channel ID below
+    logChannel = 246813579024681357

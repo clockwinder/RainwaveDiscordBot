@@ -8,10 +8,10 @@ import aiocron
 from discord.ext import commands
 from discord.ext import tasks
 from datetime import datetime
-from data.config import botChannels
-from private.private import token
-from private.private import rwID
-from private.private import rwKey
+from config.config import botChannels
+from config.private import dicordBotToken
+from config.private import rainwaveID
+from config.private import rainwaveKey
 from rainwaveclient import RainwaveClient 
 #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
@@ -24,10 +24,10 @@ intents.message_content = True
 intents.members = True
 
 rainwaveClient = RainwaveClient()
-rainwaveClient.user_id = rwID
-rainwaveClient.key = rwKey
+rainwaveClient.user_id = rainwaveID
+rainwaveClient.key = rainwaveKey
 
-#print(rainwaveClient)
+print(rainwaveClient)
 
 bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
 
@@ -120,8 +120,8 @@ async def on_ready():
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
     print('We have logged in as {0.user}'.format(bot) + ' at ' + current_time + ' on ' + current_day)
-    logChannel = bot.get_channel(855136017233608744)
-    await logChannel.send('I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`')
+    if botChannels.enableLogChannel:
+        await bot.get_channel(botChannels.logChannel).send('I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`')
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
 @bot.command(aliases=['p'])
@@ -183,4 +183,4 @@ async def ping(ctx):
     print (f'Pong! {round(bot.latency * 1000)}ms')
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
-bot.run(token)
+bot.run(dicordBotToken)
