@@ -27,7 +27,7 @@ rainwaveClient = RainwaveClient()
 rainwaveClient.user_id = rainwaveID
 rainwaveClient.key = rainwaveKey
 
-print(rainwaveClient)
+print()
 
 bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
 
@@ -119,9 +119,12 @@ async def on_ready():
     now = datetime.now()
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
-    print('We have logged in as {0.user}'.format(bot) + ' at ' + current_time + ' on ' + current_day)
+    rainwaveClient.user_id
+    loginReport = 'I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`'
+    loginReport = f'Logged in as `{bot.user} (ID: {bot.user.id})` and `Rainwave (ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
+    print(loginReport)
     if botChannels.enableLogChannel:
-        await bot.get_channel(botChannels.logChannel).send('I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`')
+        await bot.get_channel(botChannels.logChannel).send(loginReport)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
 @bot.command(aliases=['p'])
