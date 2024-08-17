@@ -39,6 +39,7 @@ Thumbs.db
 # Private Files #
 #################
 private.py
+config.py
 
 # Directories #
 ###############

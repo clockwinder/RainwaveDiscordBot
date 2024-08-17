@@ -8,26 +8,23 @@ import aiocron
 from discord.ext import commands
 from discord.ext import tasks
 from datetime import datetime
-from data.config import botChannels
-from private.private import token
-from private.private import rwID
-from private.private import rwKey
+from config.config import botChannels
+from config.config import private
+from config.config import dependencies
 from rainwaveclient import RainwaveClient 
 #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #logging.basicConfig(level=logging.DEBUG)
-
-ffmpegLocation = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
 rainwaveClient = RainwaveClient()
-rainwaveClient.user_id = rwID
-rainwaveClient.key = rwKey
+rainwaveClient.user_id = private.rainwaveID
+rainwaveClient.key = private.rainwaveKey
 
-#print(rainwaveClient)
+print()
 
 bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
 
@@ -119,9 +116,10 @@ async def on_ready():
     now = datetime.now()
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
-    print('We have logged in as {0.user}'.format(bot) + ' at ' + current_time + ' on ' + current_day)
-    logChannel = bot.get_channel(855136017233608744)
-    await logChannel.send('I have logged on as `{0.user}` at `'.format(bot) + current_time + '` on `' + current_day + '`')
+    loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
+    print(loginReport)
+    if botChannels.enableLogChannel:
+        await bot.get_channel(botChannels.logChannel).send(loginReport)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
 @bot.command(aliases=['p'])
@@ -143,7 +141,7 @@ async def play(ctx, station = 'help'):
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
-                current.voiceChannel.play(discord.FFmpegPCMAudio(executable=ffmpegLocation, source=current.selectedStream.mp3_stream))
+                current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
                 current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
@@ -183,4 +181,4 @@ async def ping(ctx):
     print (f'Pong! {round(bot.latency * 1000)}ms')
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
-bot.run(token)
+bot.run(private.dicordBotToken)
