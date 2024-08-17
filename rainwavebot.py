@@ -158,8 +158,8 @@ async def stop(ctx):
     await stopUpdates()
     await stopConnection()
 
-@bot.command(aliases=['wo','q','queue'])
-async def whatson(ctx, station = None):
+@bot.command(aliases=['np','whatson','wo','queue','q'])
+async def nowplaying(ctx, station = None):
     """New message with playback info"""
     await postCurrentlyListening(stopping=True)
     await postCurrentlyListening(ctx)
