@@ -24,8 +24,6 @@ rainwaveClient = RainwaveClient()
 rainwaveClient.user_id = private.rainwaveID
 rainwaveClient.key = private.rainwaveKey
 
-print()
-
 bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
 
 class current:
