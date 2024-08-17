@@ -24,8 +24,6 @@ rainwaveClient = RainwaveClient()
 rainwaveClient.user_id = private.rainwaveID
 rainwaveClient.key = private.rainwaveKey
 
-print()
-
 bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
 
 class current:
@@ -44,20 +42,18 @@ def getChannelList():
     return tempArray
 
 async def postCurrentlyListening(ctx = None, stopping=False):
-#Try statement was here and still prevents is alive issue
     try: 
         current.selectedStream._sync_thread.is_alive()
         newMetaData = fetchMetaData()
+        tempEmbed = nowPlayingEmbed(newMetaData)
         if stopping:
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
             await current.message.edit(embed=tempEmbed.embed)
-        elif (current.playing is None
+        elif ctx != None:
+            current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
+        elif (current.playing is None #This check will no longer be needed with progress bar update
             or current.playing.id != newMetaData.id):
-            tempEmbed = nowPlayingEmbed(newMetaData)
-            if ctx != None:
-                current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-            else:
-                await current.message.edit(embed=tempEmbed.embed)
+            await current.message.edit(embed=tempEmbed.embed)
             current.playing = newMetaData
             print('')
             print(f"{current.playing} // {current.playing.id}", end ="")
@@ -162,10 +158,11 @@ async def stop(ctx):
     await stopUpdates()
     await stopConnection()
 
-@bot.command(aliases=['wo'])
-async def whatson(ctx, station = None):
+@bot.command(aliases=['np','whatson','wo','queue','q'])
+async def nowplaying(ctx, station = None):
     """New message with playback info"""
-    await ctx.send(embed=nowPlayingEmbed(fetchMetaData()))  
+    await postCurrentlyListening(stopping=True)
+    await postCurrentlyListening(ctx)
 
 @bot.command()
 async def test(ctx):
