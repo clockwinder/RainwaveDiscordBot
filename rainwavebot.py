@@ -46,7 +46,6 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         current.selectedStream._sync_thread.is_alive()
         newMetaData = fetchMetaData()
         tempEmbed = nowPlayingEmbed(newMetaData)
-        print("position " + tempEmbed.embed.description)
         if stopping:
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
             await current.message.edit(embed=tempEmbed.embed)
@@ -93,15 +92,10 @@ def nowPlayingEmbed(metaData, stopping=False):
 
         if stopping:
             intro = 'Stopped playing'
-            print(intro)
         else:
             intro = 'Now playing on'
-            print(intro)
-            print(formatSecondsToMinutes(timeSinceStart.seconds))
-            print(formatSecondsToMinutes(metaData.length))
             progressBar = f"{formatSecondsToMinutes(timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}"
         embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar)
-        print(embed.description)
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
