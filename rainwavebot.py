@@ -45,6 +45,13 @@ async def postCurrentlyListening(ctx = None, stopping=False):
     try: 
         current.selectedStream._sync_thread.is_alive()
         newMetaData = fetchMetaData()
+        if (current.playing is None
+            or current.playing.id != newMetaData.id): #This function is only for logging
+            current.playing = newMetaData
+            print('')
+            print(f"{current.playing} // {current.playing.id}", end ="")
+        else:
+            current.playing = newMetaData
         tempEmbed = nowPlayingEmbed(newMetaData)
         if stopping:
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
@@ -54,11 +61,6 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         else:
             await current.message.edit(embed=tempEmbed.embed)
             print('.', end ="")
-        if (current.playing is None
-            or current.playing.id != newMetaData.id): #This function is only for logging
-            current.playing = newMetaData
-            print('')
-            print(f"{current.playing} // {current.playing.id}", end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
 
@@ -76,17 +78,20 @@ def setTimes():
         #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
     return(times)
 
+def progressBar(metaData):
+    times = setTimes()
+    progressBar = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    return(progressBar)
+
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
         rainwaveLogo = discord.File("data/logo.png", filename="logo.png")
-        times = setTimes()
         if stopping:
             intro = 'Stopped playing'
         else:
             intro = 'Now playing on'
-            progressBar = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
-        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar)
+        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar(metaData))
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
