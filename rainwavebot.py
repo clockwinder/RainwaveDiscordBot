@@ -7,8 +7,7 @@ import aiocron
 #import logging
 from discord.ext import commands
 from discord.ext import tasks
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from config.config import botChannels
 from config.config import private
 from config.config import dependencies
@@ -47,6 +46,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         current.selectedStream._sync_thread.is_alive()
         newMetaData = fetchMetaData()
         tempEmbed = nowPlayingEmbed(newMetaData)
+        print("position " + tempEmbed.embed.description)
         if stopping:
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
             await current.message.edit(embed=tempEmbed.embed)
@@ -63,18 +63,46 @@ async def postCurrentlyListening(ctx = None, stopping=False):
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
 
+def formatSecondsToMinutes(incomingSeconds):
+    minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
+    seconds = str(incomingSeconds % 60) #get seconds
+    return(f"{minutes.zfill(2)}:{seconds.zfill(2)}")
+
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
         rainwaveLogo = discord.File("data/logo.png", filename="logo.png")
+        
+        currentAdjustedTime = datetime.now() #datetime.now(timezone.utc)
+        
+        startTime = datetime.fromtimestamp(current.selectedStream.schedule_current['start_actual']) #timedelta(seconds=current.selectedStream.schedule_current['start_actual'])
+        endTime = datetime.fromtimestamp(current.selectedStream.schedule_current['end']) #timedelta(seconds=current.selectedStream.schedule_current['end'])
+        timeSinceStart = currentAdjustedTime-startTime
+        timeUntilEnd = endTime-currentAdjustedTime
+
+        #print(startTime)
+        #print(currentAdjustedTime)
+        #print(endTime)
+        #print(type(currentAdjustedTime))
+        #print(type(timeSinceStart))
+        #print(timeSinceStart)
+        #print(dir(timeSinceStart))
+        #print(timeSinceStart.seconds)
+        #print(f"Start time {startTime.strftime("%M:%S")}")
+        #print(f"Time since start {timeSinceStart.strftime("%M:%S")}") #Broken
+        #print(f"Time until end {timeUntilEnd.strftime("%M:%S")}") #Broken
+
         if stopping:
             intro = 'Stopped playing'
-            #progressBar = 
+            print(intro)
         else:
             intro = 'Now playing on'
-            print(timedelta(seconds=current.selectedStream.schedule_current['start_actual'])) #start_actual and end look okay, just have to deal with TZs now.
-            progressBar = timedelta(seconds=metaData.length) #Needs correct formatting %M:%S
+            print(intro)
+            print(formatSecondsToMinutes(timeSinceStart.seconds))
+            print(formatSecondsToMinutes(metaData.length))
+            progressBar = f"{formatSecondsToMinutes(timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}"
         embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar)
+        print(embed.description)
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
