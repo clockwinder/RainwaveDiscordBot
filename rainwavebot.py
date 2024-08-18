@@ -52,14 +52,13 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             await current.message.edit(embed=tempEmbed.embed)
         elif ctx != None:
             current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-        elif (current.playing is None #This check will no longer be needed with progress bar update
-            or current.playing.id != newMetaData.id):
+        else:
             await current.message.edit(embed=tempEmbed.embed)
+            print('.', end ="")
+        if current.playing.id != newMetaData.id: #This function is only for logging
             current.playing = newMetaData
             print('')
             print(f"{current.playing} // {current.playing.id}", end ="")
-        else:
-            print('.', end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
 
