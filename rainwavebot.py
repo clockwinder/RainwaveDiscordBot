@@ -8,6 +8,7 @@ import aiocron
 from discord.ext import commands
 from discord.ext import tasks
 from datetime import datetime
+from datetime import timedelta
 from config.config import botChannels
 from config.config import private
 from config.config import dependencies
@@ -68,9 +69,12 @@ def nowPlayingEmbed(metaData, stopping=False):
         rainwaveLogo = discord.File("data/logo.png", filename="logo.png")
         if stopping:
             intro = 'Stopped playing'
+            #progressBar = 
         else:
             intro = 'Now playing on'
-        embed = discord.Embed(title=f"{intro} Rainwave " + metaData.album.channel.name + " Radio", url=current.selectedStream.url, description=f"Progress bar here - {metaData.length} seconds")
+            print(timedelta(seconds=current.selectedStream.schedule_current['start_actual'])) #start_actual and end look okay, just have to deal with TZs now.
+            progressBar = timedelta(seconds=metaData.length) #Needs correct formatting %M:%S
+        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar)
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
