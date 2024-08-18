@@ -54,7 +54,8 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         else:
             await current.message.edit(embed=tempEmbed.embed)
             print('.', end ="")
-        if current.playing.id != newMetaData.id: #This function is only for logging
+        if (current.playing is None
+            or current.playing.id != newMetaData.id): #This function is only for logging
             current.playing = newMetaData
             print('')
             print(f"{current.playing} // {current.playing.id}", end ="")
@@ -66,35 +67,25 @@ def formatSecondsToMinutes(incomingSeconds):
     seconds = str(incomingSeconds % 60) #get seconds
     return(f"{minutes.zfill(2)}:{seconds.zfill(2)}")
 
+def setTimes():
+    class times:
+        currentAdjustedTime = datetime.now() #datetime.now(timezone.utc)
+        startTime = datetime.fromtimestamp(current.selectedStream.schedule_current['start_actual']) #hopefully .start gets updated
+        #endTime = datetime.fromtimestamp(current.selectedStream.schedule_current['end']) #Not currently needed
+        timeSinceStart = currentAdjustedTime - startTime
+        #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
+    return(times)
+
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
         rainwaveLogo = discord.File("data/logo.png", filename="logo.png")
-        
-        currentAdjustedTime = datetime.now() #datetime.now(timezone.utc)
-        
-        startTime = datetime.fromtimestamp(current.selectedStream.schedule_current['start_actual']) #timedelta(seconds=current.selectedStream.schedule_current['start_actual'])
-        endTime = datetime.fromtimestamp(current.selectedStream.schedule_current['end']) #timedelta(seconds=current.selectedStream.schedule_current['end'])
-        timeSinceStart = currentAdjustedTime-startTime
-        timeUntilEnd = endTime-currentAdjustedTime
-
-        #print(startTime)
-        #print(currentAdjustedTime)
-        #print(endTime)
-        #print(type(currentAdjustedTime))
-        #print(type(timeSinceStart))
-        #print(timeSinceStart)
-        #print(dir(timeSinceStart))
-        #print(timeSinceStart.seconds)
-        #print(f"Start time {startTime.strftime("%M:%S")}")
-        #print(f"Time since start {timeSinceStart.strftime("%M:%S")}") #Broken
-        #print(f"Time until end {timeUntilEnd.strftime("%M:%S")}") #Broken
-
+        times = setTimes()
         if stopping:
             intro = 'Stopped playing'
         else:
             intro = 'Now playing on'
-            progressBar = f"{formatSecondsToMinutes(timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}"
+            progressBar = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
         embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar)
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
