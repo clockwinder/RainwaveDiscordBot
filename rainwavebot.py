@@ -78,9 +78,12 @@ def setTimes():
         #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
     return(times)
 
-def progressBar(metaData):
+def progressBar(metaData, stopping=False):
     times = setTimes()
-    progressBar = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    if stopping:
+        print('stopping progress bar') #This gets replaced with the stopping progress bar
+    else:
+        progressBar = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
     return(progressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
@@ -91,7 +94,7 @@ def nowPlayingEmbed(metaData, stopping=False):
             intro = 'Stopped playing'
         else:
             intro = 'Now playing on'
-        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar(metaData))
+        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=progressBar(metaData, stopping))
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
