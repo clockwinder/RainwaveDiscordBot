@@ -73,7 +73,7 @@ def setTimes():
     class times:
         currentAdjustedTime = datetime.now(timezone.utc) #This time is in UTC
         startTime = current.selectedStream.schedule_current.start_actual #This time is in UTC
-        #endTime = datetime.fromtimestamp(current.selectedStream.schedule_current['end']) #Not currently needed, not in UTC
+        #endTime = current.selectedStream.schedule_current.end #This time is in UTC
         timeSinceStart = currentAdjustedTime - startTime
         #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
     return(times)
