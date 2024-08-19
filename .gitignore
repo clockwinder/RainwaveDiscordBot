@@ -48,3 +48,4 @@ ffmpeg-2021-11-22/
 # Cached Files #
 ################
 *.pyc
+**/__pycache__
