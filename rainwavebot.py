@@ -93,13 +93,17 @@ def generateProgressBar(metaData, stopping=False):
     if options.enableProgressBar == False:
         progressBar = ''
     elif options.progressBarStyle == 1: #Left to right "fill"
-        progressBar = f"{options.progressBarChars[0] * progress}{options.progressBarChars[1] * (options.progressBarLength - progress)}"
+        progressBar = f"{options.progressBarCharacters[0] * progress}{options.progressBarCharacters[1] * (options.progressBarLength - progress)}"
     elif options.progressBarStyle == 2: #Left to right indicator
-        progressBar = f"{options.progressBarChars[0] * (progress - 1)}{options.progressBarChars[1]}{options.progressBarChars[0] * (options.progressBarLength - progress)}"
+        progressBar = f"{options.progressBarCharacters[0] * (progress - 1)}{options.progressBarCharacters[1]}{options.progressBarCharacters[0] * (options.progressBarLength - progress)}"
     #TODO See if we can prevent the flickering from the formatting of Style3
     #elif options.progressBarStyle == 3: #Left to right color fill
     #    progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (options.progressBarLength - progress)}[0m{timer}\n```"
-    completeProgressBar = f"{progressBar}{timer}"
+    if options.enableProgressBar == True and options.enableProgressTimes == True:
+        spacer = ' '
+    else:
+        spacer = ''
+    completeProgressBar = f"{progressBar}{spacer}{timer}"
     return(completeProgressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
