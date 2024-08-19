@@ -71,9 +71,9 @@ def formatSecondsToMinutes(incomingSeconds):
 
 def setTimes():
     class times:
-        currentAdjustedTime = datetime.now() #datetime.now(timezone.utc)
-        startTime = datetime.fromtimestamp(current.selectedStream.schedule_current['start_actual']) #hopefully .start gets updated
-        #endTime = datetime.fromtimestamp(current.selectedStream.schedule_current['end']) #Not currently needed
+        currentAdjustedTime = datetime.now(timezone.utc) #This time is in UTC
+        startTime = current.selectedStream.schedule_current.start_actual #This time is in UTC
+        #endTime = datetime.fromtimestamp(current.selectedStream.schedule_current['end']) #Not currently needed, not in UTC
         timeSinceStart = currentAdjustedTime - startTime
         #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
     return(times)
@@ -81,12 +81,13 @@ def setTimes():
 def progressBar(metaData, stopping=False):
     times = setTimes()
     if stopping:
-        indicator = 
+        indicator = 0
     else:
-        indicator = 
-    bar = f"{}:radio_button:{}" #What's it going to look like?
-    timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+        indicator = 0
+    bar = f"{0}:radio_button:{0}" #What's it going to look like?
+    timer = f"[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]" # add `` codeblock if not in progress bar
     progressBar = f" {timer}"
+    progressBar = f"```ansi\n[2;34m▰▰▰▰▰▰[0m[2;37m▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰[0m{timer}\n```"
     return(progressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
