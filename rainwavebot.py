@@ -11,6 +11,7 @@ from datetime import datetime, timedelta, timezone
 from config.config import botChannels
 from config.config import private
 from config.config import dependencies
+from config.config import options
 from rainwaveclient import RainwaveClient 
 #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
@@ -80,15 +81,27 @@ def setTimes():
 
 def generateProgressBar(metaData, stopping=False):
     times = setTimes()
+
+    if options.enableProgressTimes == True:
+        if options.progressBarStyle == 3: #Type 3 is already in a code block
+            timer = f"[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]" 
+        else:
+            timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    else:
+        timer = ''
+    progress = int(options.progressBarLength * (times.timeSinceStart.seconds/metaData.length))
+    if options.progressBarStyle == 1: #Left to right "fill"
+        progressBar = f"{options.progressBarChars[0] * progress}{options.progressBarChars[1] * (options.progressBarLength - progress)}"
+    elif options.progressBarStyle == 2: #Left to right indicator
+        progressBar = f"{options.progressBarChars[0] * (progress - 1)}{options.progressBarChars[1]}{options.progressBarChars[0] * (options.progressBarLength - progress)}"
+    elif options.progressBarStyle == 3: #Left to right color fill
+        progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (options.progressBarLength - progress)}[0m{timer}\n```"
     if stopping:
         indicator = 0
     else:
         indicator = 0
-    bar = f"{0}:radio_button:{0}" #What's it going to look like?
-    timer = f"[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]" # add `` codeblock if not in progress bar
-    progressBar = f" {timer}"
-    progressBar = f"```ansi\n[2;34m▰▰▰▰▰▰[0m[2;37m▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰[0m{timer}\n```"
-    return(progressBar)
+    completeProgressBar = f"{indicator}{progressBar}{timer}"
+    return(completeProgressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
