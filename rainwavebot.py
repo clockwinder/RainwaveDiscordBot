@@ -81,9 +81,12 @@ def setTimes():
 def progressBar(metaData, stopping=False):
     times = setTimes()
     if stopping:
-        print('stopping progress bar') #This gets replaced with the stopping progress bar
+        indicator = 
     else:
-        progressBar = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+        indicator = 
+    bar = f"{}:radio_button:{}" #What's it going to look like?
+    timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    progressBar = f" {timer}"
     return(progressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
