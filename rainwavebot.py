@@ -81,26 +81,25 @@ def setTimes():
 
 def generateProgressBar(metaData, stopping=False):
     times = setTimes()
-
-    if options.enableProgressTimes == True:
-        if options.progressBarStyle == 3: #Type 3 is already in a code block
-            timer = f"[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]" 
-        else:
-            timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
-    else:
+    if ((options.enableProgressBar == False
+        and options.enableProgressTimes == False)
+        or stopping == True):
+        return(None)
+    if options.enableProgressTimes == False:
         timer = ''
+    else:
+        timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
     progress = int(options.progressBarLength * (times.timeSinceStart.seconds/metaData.length))
-    if options.progressBarStyle == 1: #Left to right "fill"
+    if options.enableProgressBar == False:
+        progressBar = ''
+    elif options.progressBarStyle == 1: #Left to right "fill"
         progressBar = f"{options.progressBarChars[0] * progress}{options.progressBarChars[1] * (options.progressBarLength - progress)}"
     elif options.progressBarStyle == 2: #Left to right indicator
         progressBar = f"{options.progressBarChars[0] * (progress - 1)}{options.progressBarChars[1]}{options.progressBarChars[0] * (options.progressBarLength - progress)}"
-    elif options.progressBarStyle == 3: #Left to right color fill
-        progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (options.progressBarLength - progress)}[0m{timer}\n```"
-    if stopping:
-        indicator = 0
-    else:
-        indicator = 0
-    completeProgressBar = f"{indicator}{progressBar}{timer}"
+    #TODO See if we can prevent the flickering from the formatting of Style3
+    #elif options.progressBarStyle == 3: #Left to right color fill
+    #    progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (options.progressBarLength - progress)}[0m{timer}\n```"
+    completeProgressBar = f"{progressBar}{timer}"
     return(completeProgressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
