@@ -1,26 +1,52 @@
 class botChannels:
     #To restrict which voice channels the bot can use, set below to true.
     restrictVoiceChannels = False
-    #If above is set to true, list allowed channel/s IDs as shown below.
+    #If above is set to true, list allowed channel/s IDs in a list as shown below.
     allowedVoiceChannels = [123456789012345678, 987654321098765432]
+    
     #To restrict which test channels the bot can receive commands on, set below to true.
     restrictTextChannels = False
-    #If above is set to true, list allowed channel/s IDs as shown below.
+    #If above is set to true, list allowed channel/s IDs in a list as shown below.
     allowedTextChannels = [112233445566778899, 998877665544332211]
+    
     #If you want the bot to log, login and error info in a channel, set below to True
-    enableLogChannel = False
+    enableLogChannel = True
     #If above is set to true, list your logging channel ID below
     logChannel = 246813579024681357
 
 class private:
     #Discord bot token
     dicordBotToken = 'iV7B9T0d3hikb331nmGsvgHPGAv8jwFV3gKFs9eRonF4lgje68ZdrEX9aSJ'
+    
     #Rainwave API ID
     rainwaveID = 12345
+    
     #Rainwave API Key
     rainwaveKey = '12345abcde'
     
 class dependencies:
     #Location of FFMPEG file
     ffmpeg = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
+    
     #Opus info here
+
+
+class options:
+    #Enables display of song progress in a numerical style timer e.g. [01:05/01:21]
+    enableProgressTimes = True
+    
+    #Enables display of song progress in a graphical manner e.g. ▰▰▰▱▱▱▱▱▱▱▱
+    enableProgressBar = True
+    
+    #Allows selection of progress bar style between 1 and 2
+    #1 is a left to right "fill" style progress bar e.g. ▰▰▰▱▱▱▱▱▱▱▱
+    #2 is a moving indicator style progress bar e.g. ▱▱▱▰▱▱▱▱▱▱▱
+    progressBarStyle = 1
+   
+    #Allows selection of progress bar character length
+    progressBarLength = 14
+    
+    #Allows selection of characters which make up the progress bar
+    #for style 1 ['▰','▱'] or ['▶','▷'] or ['█','░'] is suggested
+    #for style 2 ['═','╪'] or ['—','⎔'] or ['▬',':radio_button:'] is suggested
+    progressBarCharacters = ['▰','▱']
