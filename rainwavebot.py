@@ -7,10 +7,11 @@ import aiocron
 #import logging
 from discord.ext import commands
 from discord.ext import tasks
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from config.config import botChannels
 from config.config import private
 from config.config import dependencies
+from config.config import options
 from rainwaveclient import RainwaveClient 
 #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
@@ -45,22 +46,65 @@ async def postCurrentlyListening(ctx = None, stopping=False):
     try: 
         current.selectedStream._sync_thread.is_alive()
         newMetaData = fetchMetaData()
+        if (current.playing is None
+            or current.playing.id != newMetaData.id): #This function is only for logging
+            current.playing = newMetaData
+            print('')
+            print(f"{current.playing} // {current.playing.id}", end ="")
+        else:
+            current.playing = newMetaData
         tempEmbed = nowPlayingEmbed(newMetaData)
         if stopping:
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
             await current.message.edit(embed=tempEmbed.embed)
         elif ctx != None:
             current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-        elif (current.playing is None #This check will no longer be needed with progress bar update
-            or current.playing.id != newMetaData.id):
-            await current.message.edit(embed=tempEmbed.embed)
-            current.playing = newMetaData
-            print('')
-            print(f"{current.playing} // {current.playing.id}", end ="")
         else:
+            await current.message.edit(embed=tempEmbed.embed)
             print('.', end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
+
+def formatSecondsToMinutes(incomingSeconds):
+    minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
+    seconds = str(incomingSeconds % 60) #get seconds
+    return(f"{minutes.zfill(2)}:{seconds.zfill(2)}")
+
+def setTimes():
+    class times:
+        currentAdjustedTime = datetime.now(timezone.utc) #This time is in UTC
+        startTime = current.selectedStream.schedule_current.start_actual #This time is in UTC
+        #endTime = current.selectedStream.schedule_current.end #This time is in UTC
+        timeSinceStart = currentAdjustedTime - startTime
+        #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
+    return(times)
+
+def generateProgressBar(metaData, stopping=False):
+    times = setTimes()
+    if ((options.enableProgressBar == False
+        and options.enableProgressTimes == False)
+        or stopping == True):
+        return(None)
+    if options.enableProgressTimes == False:
+        timer = ''
+    else:
+        timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    progress = int(options.progressBarLength * (times.timeSinceStart.seconds/metaData.length))
+    if options.enableProgressBar == False:
+        progressBar = ''
+    elif options.progressBarStyle == 1: #Left to right "fill"
+        progressBar = f"{options.progressBarCharacters[0] * progress}{options.progressBarCharacters[1] * (options.progressBarLength - progress)}"
+    elif options.progressBarStyle == 2: #Left to right indicator
+        progressBar = f"{options.progressBarCharacters[0] * (progress - 1)}{options.progressBarCharacters[1]}{options.progressBarCharacters[0] * (options.progressBarLength - progress)}"
+    #TODO See if we can prevent the flickering from the formatting of Style3
+    #elif options.progressBarStyle == 3: #Left to right color fill
+    #    progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (options.progressBarLength - progress)}[0m{timer}\n```"
+    if options.enableProgressBar == True and options.enableProgressTimes == True:
+        spacer = ' '
+    else:
+        spacer = ''
+    completeProgressBar = f"{progressBar}{spacer}{timer}"
+    return(completeProgressBar)
 
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
@@ -70,7 +114,7 @@ def nowPlayingEmbed(metaData, stopping=False):
             intro = 'Stopped playing'
         else:
             intro = 'Now playing on'
-        embed = discord.Embed(title=f"{intro} Rainwave " + metaData.album.channel.name + " Radio", url=current.selectedStream.url, description=f"Progress bar here - {metaData.length} seconds")
+        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=generateProgressBar(metaData, stopping))
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
