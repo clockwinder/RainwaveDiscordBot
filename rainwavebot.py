@@ -114,7 +114,7 @@ def nowPlayingEmbed(metaData, stopping=False):
             intro = 'Stopped playing'
         else:
             intro = 'Now playing on'
-        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=generateProgressBar(metaData, stopping))
+        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=generateProgressBar(metaData, stopping), color = discord.Colour.from_rgb(51, 115, 200))
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
