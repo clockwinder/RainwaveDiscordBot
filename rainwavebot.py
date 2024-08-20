@@ -114,12 +114,16 @@ def nowPlayingEmbed(metaData, stopping=False):
             intro = 'Stopped playing'
         else:
             intro = 'Now playing on'
-        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", url=current.selectedStream.url, description=generateProgressBar(metaData, stopping), color = discord.Colour.from_rgb(51, 115, 200))
+        embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", 
+            url=current.selectedStream.url, 
+            description=generateProgressBar(metaData, stopping), 
+            color = discord.Colour.from_rgb(options.embedColor[0],options.embedColor[1],options.embedColor[2]))
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
             artistData = metaData.artist_string
-        embed.add_field(name=f"{metaData.title} ", value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
+        embed.add_field(name=f"{metaData.title} ", 
+            value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
         embed.set_thumbnail(url=metaData.album.art)
         embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://logo.png")
     return formatedEmbed
