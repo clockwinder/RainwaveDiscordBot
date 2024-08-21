@@ -15,6 +15,8 @@ from config.config import options
 from rainwaveclient import RainwaveClient 
 #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
+MINIMUM_REFRESH_DELAY = 6
+
 #logging.basicConfig(level=logging.DEBUG)
 
 intents = discord.Intents.default()
@@ -151,7 +153,7 @@ async def stopConnection():
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
-@tasks.loop(seconds = 6) #TODO Determine if 6 is actually safe, and if we can go lower
+@tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
     await postCurrentlyListening()
     
@@ -226,4 +228,7 @@ async def ping(ctx):
     print (f'Pong! {round(bot.latency * 1000)}ms')
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
+if options.refreshDelay < MINIMUM_REFRESH_DELAY:
+    options.refreshDelay = MINIMUM_REFRESH_DELAY
+    print(f"WARN refreshDelay set to {MINIMUM_REFRESH_DELAY}")
 bot.run(private.dicordBotToken)
