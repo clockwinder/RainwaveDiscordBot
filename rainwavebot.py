@@ -151,7 +151,7 @@ async def stopConnection():
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
-@tasks.loop(seconds = 5)
+@tasks.loop(seconds = 6)
 async def updatePlaying():
     await postCurrentlyListening()
     
