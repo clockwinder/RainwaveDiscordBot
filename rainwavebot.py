@@ -153,7 +153,7 @@ async def stopConnection():
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
-def opusLoadedCheck():
+def loadOpus():
     opusStatus = "Failed"
     if discord.opus.is_loaded() == False:
         try:
@@ -174,8 +174,10 @@ async def on_ready():
     now = datetime.now()
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
+    opusStatus = loadOpus()
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     print(loginReport)
+    print(f"Opus: {opusStatus}")
     if botChannels.enableLogChannel:
         await bot.get_channel(botChannels.logChannel).send(loginReport)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
@@ -199,7 +201,6 @@ async def play(ctx, station = 'help'):
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
-                print(f"Opus: {opusLoadedCheck()}")
                 current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
                 current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
