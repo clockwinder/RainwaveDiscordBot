@@ -29,7 +29,7 @@ class dependencies:
     ffmpeg = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
     
     #Location of opus file.
-    opusLocation = ""
+    opus = ""
 
 
 class options:

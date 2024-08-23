@@ -157,7 +157,7 @@ def opusLoadedCheck():
     opusStatus = "Failed"
     if discord.opus.is_loaded() == False:
         try:
-            discord.opus.load_opus(dependencies.opusLocation)
+            discord.opus.load_opus(dependencies.opus)
             opusStatus = "Initialized"
         except Exception as returnedException:
             print(f"Opus loading error error: {returnedException}")
