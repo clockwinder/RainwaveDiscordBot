@@ -153,6 +153,18 @@ async def stopConnection():
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
+def opusLoadedCheck():
+    opusStatus = "Failed"
+    if discord.opus.is_loaded() == False:
+        try:
+            discord.opus.load_opus(dependencies.opusLocation)
+            opusStatus = "Initialized"
+        except Exception as returnedException:
+            print(f"Opus loading error error: {returnedException}")
+    else:
+        opusStatus = "Pre-Loaded"
+    return(opusStatus)
+
 @tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
     await postCurrentlyListening()
@@ -187,6 +199,7 @@ async def play(ctx, station = 'help'):
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
+                print(f"Opus: {opusLoadedCheck()}")
                 current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
                 current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
@@ -230,5 +243,5 @@ async def ping(ctx):
 
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
-    print(f"WARN refreshDelay set to {MINIMUM_REFRESH_DELAY}")
+    print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
 bot.run(private.dicordBotToken)

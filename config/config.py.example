@@ -25,10 +25,11 @@ class private:
     rainwaveKey = '12345abcde'
     
 class dependencies:
-    #Location of FFMPEG file
+    #Location of FFMPEG file.
     ffmpeg = "ffmpeg-2021-11-22/bin/ffmpeg.exe"
     
-    #Opus info here
+    #Location of opus file.
+    opusLocation = ""
 
 
 class options:
