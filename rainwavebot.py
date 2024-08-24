@@ -153,6 +153,18 @@ async def stopConnection():
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
+def loadOpus():
+    opusStatus = "Failed"
+    if discord.opus.is_loaded() == False:
+        try:
+            discord.opus.load_opus(dependencies.opus)
+            opusStatus = "Initialized"
+        except Exception as returnedException:
+            print(f"Opus loading error error: {returnedException}")
+    else:
+        opusStatus = "Pre-Loaded"
+    return(opusStatus)
+
 @tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
     await postCurrentlyListening()
@@ -162,8 +174,10 @@ async def on_ready():
     now = datetime.now()
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
+    opusStatus = loadOpus()
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     print(loginReport)
+    print(f"Opus: {opusStatus}")
     if botChannels.enableLogChannel:
         await bot.get_channel(botChannels.logChannel).send(loginReport)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
@@ -230,5 +244,5 @@ async def ping(ctx):
 
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
-    print(f"WARN refreshDelay set to {MINIMUM_REFRESH_DELAY}")
+    print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
 bot.run(private.dicordBotToken)
