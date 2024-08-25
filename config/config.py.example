@@ -33,6 +33,9 @@ class dependencies:
 
 
 class options:
+    #Change the prefix of your bot here
+    botPrefix = "rw"
+
     #Enables display of song progress in a numerical style timer e.g. [01:05/01:21]
     enableProgressTimes = True
     
