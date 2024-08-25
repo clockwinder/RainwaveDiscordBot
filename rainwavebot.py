@@ -150,7 +150,7 @@ def validChannelCheck(ctx):
 async def stopUpdates():
     print("stopUpdates")
     print("updatePlaying.cancel()")
-    updatePlaying.cancel()
+    updatePlaying.stop() #So this needs to be stop() if called by the loop, but cancel() if called by the user, why?
     print("await postCurrentlyListening(stopping=True)")
     await postCurrentlyListening(stopping=True)
     print("current.selectedStream.stop_sync()")
