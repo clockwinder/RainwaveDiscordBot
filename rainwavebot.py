@@ -59,8 +59,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         if stopping: #If stopping, send final update
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
             await current.message.edit(embed=tempEmbed.embed)
-            print('') #Newline so the "..." end on a line break
-            #FIXME When called by `usersPresent == False`` The above completes but then stops, and the below is not completed.
+            print('') #Newline so the "..." ends on a line break
         elif ctx != None: #If passed context (done when a new message is wanted), create new message
             current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
         else: #Otherwise, edit old message
@@ -146,8 +145,8 @@ def validChannelCheck(ctx):
     return response
 
 async def stopUpdates(gracefully = False):
-    if gracefully:
-        updatePlaying.stop() #So this needs to be stop() if called by the loop, but cancel() if called by the user, why?
+    if gracefully: #If called from the loop which it is ending, the loop must be ended gracefully instead of canceled.
+        updatePlaying.stop()
     else:
         updatePlaying.cancel()
     await postCurrentlyListening(stopping=True)
