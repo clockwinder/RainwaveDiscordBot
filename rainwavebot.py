@@ -57,8 +57,11 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             current.playing = newMetaData
         tempEmbed = nowPlayingEmbed(newMetaData)
         if stopping: #If stopping, send final update
+            print("tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)")
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
+            print("await current.message.edit(embed=tempEmbed.embed)")
             await current.message.edit(embed=tempEmbed.embed)
+            print("postCurrentlyListeningStoppingDone")
         elif ctx != None: #If passed context (done when a new message is wanted), create new message
             current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
         else: #Otherwise, edit old message
