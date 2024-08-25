@@ -181,7 +181,8 @@ def checkUserPresence():
 @tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
     usersPresent = checkUserPresence()
-    if usersPresent == False:
+    if ((usersPresent == False)
+         and (options.autoDisconnect == True)):
         print("All alone, disconnecting")
         await stopUpdates(gracefully = True)
         await stopConnection()

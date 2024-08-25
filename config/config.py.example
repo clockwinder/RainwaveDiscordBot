@@ -59,3 +59,6 @@ class options:
     #Numer of seconds between refresh of progress bar and timer, can be increased if user is being rate limited.
     #Minimum value can never be below 6.
     refreshDelay = 6
+    
+    #If set to `True`, bot will disconnect if no users are present in the bots voice channel.
+    autoDisconnect = True
