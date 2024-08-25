@@ -57,18 +57,15 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             current.playing = newMetaData
         tempEmbed = nowPlayingEmbed(newMetaData)
         if stopping: #If stopping, send final update
-            print("tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)")
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
-            print("await current.message.edit(embed=tempEmbed.embed)")
             await current.message.edit(embed=tempEmbed.embed)
+            print('') #Newline so the "..." end on a line break
             #FIXME When called by `usersPresent == False`` The above completes but then stops, and the below is not completed.
-            print("postCurrentlyListeningStoppingDone")
         elif ctx != None: #If passed context (done when a new message is wanted), create new message
             current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
         else: #Otherwise, edit old message
             await current.message.edit(embed=tempEmbed.embed)
             print('.', end ="")
-        print("End of post currently listening")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
 
@@ -147,22 +144,17 @@ def validChannelCheck(ctx):
         response = 'User does not appear to be in a voice channel'
     return response
 
-async def stopUpdates():
-    print("stopUpdates")
-    print("updatePlaying.cancel()")
-    updatePlaying.stop() #So this needs to be stop() if called by the loop, but cancel() if called by the user, why?
-    print("await postCurrentlyListening(stopping=True)")
+async def stopUpdates(gracefully = False):
+    if gracefully:
+        updatePlaying.stop() #So this needs to be stop() if called by the loop, but cancel() if called by the user, why?
+    else:
+        updatePlaying.cancel()
     await postCurrentlyListening(stopping=True)
-    print("current.selectedStream.stop_sync()")
     current.selectedStream.stop_sync()
-    print("current.voiceChannel.stop()")
     current.voiceChannel.stop()
-    print("current.message = None")
     current.message = None
-    print("Finished 1")
 
 async def stopConnection():
-    print("stopConnection")
     await current.voiceChannel.disconnect()
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
 
@@ -191,11 +183,8 @@ async def updatePlaying():
     usersPresent = checkUserPresence()
     if usersPresent == False:
         print("All alone, disconnecting")
-        print("stopping Updates")
-        await stopUpdates()
-        print("stopping Connection")
+        await stopUpdates(gracefully = True)
         await stopConnection()
-        print("all done")
     else:
         await postCurrentlyListening()
     
