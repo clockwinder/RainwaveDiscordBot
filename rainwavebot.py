@@ -171,12 +171,12 @@ def loadOpus():
     return(opusStatus)
 
 def checkUserPresence():
-    usersPresent = False
+    userPresent = False
     for members in current.voiceChannel.channel.members:
         if members.id != bot.user.id:
-            usersPresent = True
+            userPresent = True
             break
-    return(usersPresent)
+    return(userPresent)
 
 @tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
