@@ -56,16 +56,18 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         else:
             current.playing = newMetaData
         tempEmbed = nowPlayingEmbed(newMetaData)
-        if stopping:
+        if stopping: #If stopping, send final update
             tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
             await current.message.edit(embed=tempEmbed.embed)
-        elif ctx != None:
+            print('') #Newline so the "..." ends on a line break
+        elif ctx != None: #If passed context (done when a new message is wanted), create new message
             current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-        else:
+        else: #Otherwise, edit old message
             await current.message.edit(embed=tempEmbed.embed)
             print('.', end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
+        traceback.print_exception()
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
@@ -142,8 +144,11 @@ def validChannelCheck(ctx):
         response = 'User does not appear to be in a voice channel'
     return response
 
-async def stopUpdates():
-    updatePlaying.cancel()
+async def stopUpdates(gracefully = False):
+    if gracefully: #If called from the loop which it is ending, the loop must be ended gracefully instead of canceled.
+        updatePlaying.stop()
+    else:
+        updatePlaying.cancel()
     await postCurrentlyListening(stopping=True)
     current.selectedStream.stop_sync()
     current.voiceChannel.stop()
@@ -165,9 +170,23 @@ def loadOpus():
         opusStatus = "Pre-Loaded"
     return(opusStatus)
 
+def checkUserPresence():
+    userPresent = False
+    for members in current.voiceChannel.channel.members:
+        if members.id != bot.user.id:
+            userPresent = True
+            break
+    return(userPresent)
+
 @tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
-    await postCurrentlyListening()
+    usersPresent = checkUserPresence()
+    if usersPresent == False:
+        print("All alone, disconnecting")
+        await stopUpdates(gracefully = True)
+        await stopConnection()
+    else:
+        await postCurrentlyListening()
     
 @bot.event
 async def on_ready():
