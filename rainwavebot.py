@@ -206,6 +206,7 @@ async def on_ready():
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
     opusStatus = loadOpus()
+    await bot.user.edit(username=options.botName)
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     print(loginReport)
     print(f"Opus: {opusStatus}")
