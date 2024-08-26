@@ -31,11 +31,10 @@ class dependencies:
     #Location of opus file.
     opus = ""
 
-
 class options:
     #Change the name of your bot here
     botName = "Rain.Wave"
-    
+
     #Change the prefix of your bot here
     botPrefix = "rw."
 

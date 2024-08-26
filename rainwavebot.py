@@ -134,19 +134,19 @@ def nowPlayingEmbed(metaData, stopping=False):
     return formatedEmbed
 
 async def validChannelCheck(ctx, checkVoiceChannel = False):
-    if (botChannels.restrictTextChannels 
+    response = True #Assume nothing is wrong
+    if (botChannels.restrictTextChannels #If disallowed channel
         and (ctx.message.channel.id not in botChannels.allowedTextChannels)):
         response = f"{bot.user.name} commands not allowed in {ctx.message.channel.name}"
-    else:
-        response = True
-    if (response == True) and (checkVoiceChannel == True): #If text check passes, check voice if requested
+    elif checkVoiceChannel == True: 
         try:
-            if (botChannels.restrictVoiceChannels 
-                and (ctx.message.author.voice.channel.id not in botChannels.allowedVoiceChannels)):
+            authorsChannel = ctx.message.author.voice.channel.id #Creating this variable checks that they're in a channel at all.
+            if (botChannels.restrictVoiceChannels #If disallowed voice channel
+                and (authorsChannel not in botChannels.allowedVoiceChannels)):
                 response = f"{bot.user.name} music playback not allowed in {ctx.message.author.voice.channel.name}"
-        except:
+        except: #If user not in a visible voice channel
             response = 'You do not appear to be in a voice channel'
-    if response != True:
+    if response != True: #Log error and turn response into a bool for return
         print(response) #TODO logging
         await ctx.message.channel.send(f"{ctx.message.author.mention} {response}")
         response = False
