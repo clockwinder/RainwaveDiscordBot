@@ -3,6 +3,7 @@ import time
 import asyncio
 import random
 import os
+import traceback
 import aiocron
 #import logging
 from discord.ext import commands
@@ -68,7 +69,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             print('.', end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
-        traceback.print_exception()
+        traceback.print_exc() #Updated to traceback2, is this needed
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
