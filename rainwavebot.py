@@ -46,47 +46,56 @@ def getChannelList():
         tempArray.append(entries.key)
     return tempArray
 
-async def postCurrentlyListening(ctx = None, stopping=False):
-    try: 
-        current.selectedStream._sync_thread.is_alive()
-        newMetaData = fetchMetaData()
-        if (current.playing is None
-            or current.playing.id != newMetaData.id): #This function is only for logging
-            current.playing = newMetaData
-            print('')
-            print(f"{current.playing} // {current.playing.id}", end ="")
-        else:
-            current.playing = newMetaData
-        tempEmbed = nowPlayingEmbed(newMetaData)
-        if stopping: #If stopping, send final update
-            tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
-            await current.message.edit(embed=tempEmbed.embed)
-            print('') #Newline so the "..." ends on a line break
-        elif ctx != None: #If passed context (done when a new message is wanted), create new message
-            current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-        else: #Otherwise, edit old message
-            await current.message.edit(embed=tempEmbed.embed)
-            print('.', end ="")
+def checkSyncThreadIsAlive():
+    try:
+        threadIsAlive = current.selectedStream._sync_thread.is_alive()
     except Exception as returnedException:
-        print(f"postCurrentlyListening error: {returnedException}")
-        traceback.print_exc()
+        #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
+        #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
+        threadIsAlive = False
+    if threadIsAlive != True:
+        current.selectedStream.start_sync()
+
+async def postCurrentlyListening(ctx = None, stopping=False):
+    checkSyncThreadIsAlive()
+    newMetaData = fetchMetaData()
+    if (current.playing is None
+        or current.playing.id != newMetaData.id): #This function is only for logging
+        current.playing = newMetaData
+        print('')
+        print(f"{current.playing} // {current.playing.id}", end ="")
+    else:
+        current.playing = newMetaData
+    tempEmbed = nowPlayingEmbed(newMetaData)
+    if stopping: #If stopping, send final update
+        tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
+        await current.message.edit(embed=tempEmbed.embed)
+        print('') #Newline so the "..." ends on a line break
+    elif ctx != None: #If passed context (done when a new message is wanted), create new message
+        current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
+    else: #Otherwise, edit old message
+        await current.message.edit(embed=tempEmbed.embed)
+        print('.', end ="")
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
     seconds = str(incomingSeconds % 60) #get seconds
     return(f"{minutes.zfill(2)}:{seconds.zfill(2)}")
 
-def setTimes():
+def setTimes(metaData):
     class times:
         currentAdjustedTime = datetime.now(timezone.utc) #This time is in UTC
         startTime = current.selectedStream.schedule_current.start_actual #This time is in UTC
         #endTime = current.selectedStream.schedule_current.end #This time is in UTC
         timeSinceStart = currentAdjustedTime - startTime
         #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
+        #The below checks for rainwave issues. If their system fails, the current track "plays" forever.
+        if timeSinceStart.seconds > metaData.length: #Check int to int value
+            timeSinceStart = datetime.fromtimestamp(metaData.length, timezone.utc) #TODO figure out a way to test this.
     return(times)
 
 def generateProgressBar(metaData, stopping=False):
-    times = setTimes()
+    times = setTimes(metaData)
     if ((options.enableProgressBar == False
         and options.enableProgressTimes == False)
         or stopping == True):
@@ -234,7 +243,7 @@ async def play(ctx, station = 'help'):
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
                 current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
-                current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
+
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
                 updatePlaying.start()  
