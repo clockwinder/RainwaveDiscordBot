@@ -82,20 +82,22 @@ def formatSecondsToMinutes(incomingSeconds):
     seconds = str(incomingSeconds % 60) #get seconds
     return(f"{minutes.zfill(2)}:{seconds.zfill(2)}")
 
-def setTimes(metaData):
+def setTimes():
     class times:
         currentAdjustedTime = datetime.now(timezone.utc) #This time is in UTC
         startTime = current.selectedStream.schedule_current.start_actual #This time is in UTC
         #endTime = current.selectedStream.schedule_current.end #This time is in UTC
         timeSinceStart = currentAdjustedTime - startTime
         #timeUntilEnd = endTime - currentAdjustedTime #Not currently needed
-        #The below checks for rainwave issues. If their system fails, the current track "plays" forever.
-        if timeSinceStart.seconds > metaData.length: #Check int to int value
-            timeSinceStart = datetime.fromtimestamp(metaData.length, timezone.utc) #TODO figure out a way to test this.
     return(times)
 
 def generateProgressBar(metaData, stopping=False):
-    times = setTimes(metaData)
+    times = setTimes()
+    #The below checks for rainwave issues. If their system fails, the current track "plays" forever.
+    if times.timeSinceStart.seconds > metaData.length: #Check int to int value
+        timeSinceStartInSeconds = metaData.length #If time is too long, set max.
+    else: #Else just do a seconds conversion.
+        timeSinceStartInSeconds = times.timeSinceStart.seconds 
     if ((options.enableProgressBar == False
         and options.enableProgressTimes == False)
         or stopping == True):
@@ -103,8 +105,8 @@ def generateProgressBar(metaData, stopping=False):
     if options.enableProgressTimes == False:
         timer = ''
     else:
-        timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
-    progress = int(options.progressBarLength * (times.timeSinceStart.seconds/metaData.length))
+        timer = f"`[{formatSecondsToMinutes(timeSinceStartInSeconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    progress = int(options.progressBarLength * (timeSinceStartInSeconds/metaData.length))
     if options.enableProgressBar == False:
         progressBar = ''
     elif options.progressBarStyle == 1: #Left to right "fill"
