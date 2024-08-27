@@ -3,6 +3,7 @@ import time
 import asyncio
 import random
 import os
+import traceback
 import aiocron
 #import logging
 from discord.ext import commands
@@ -27,7 +28,8 @@ rainwaveClient = RainwaveClient()
 rainwaveClient.user_id = private.rainwaveID
 rainwaveClient.key = private.rainwaveKey
 
-bot = commands.Bot(command_prefix='rw.', description="rainwave.cc bot, in development by Roach", intents=intents)
+bot = commands.Bot(command_prefix=options.botPrefix, 
+    description=f"rainwave.cc bot, in development by Roach\nUse `{options.botPrefix}play` to get started", intents=intents)
 
 class current:
     voiceChannel = None
@@ -67,7 +69,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             print('.', end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
-        traceback.print_exception()
+        traceback.print_exc()
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
@@ -132,16 +134,23 @@ def nowPlayingEmbed(metaData, stopping=False):
         embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://logo.png")
     return formatedEmbed
 
-def validChannelCheck(ctx):
-    try:
-        if (botChannels.restrictVoiceChannels and ctx.message.author.voice.channel.id not in botChannels.allowedVoiceChannels):
-            response = 'Music playback not allowed in this voice channel'
-        elif (botChannels.restrictTextChannels and ctx.message.channel.id not in botChannels.allowedTextChannels):
-            response = 'Bot commands not allowed in this text channel'
-        else:
-            response = True
-    except:
-        response = 'User does not appear to be in a voice channel'
+async def validChannelCheck(ctx, checkVoiceChannel = False):
+    response = True #Assume nothing is wrong
+    if (botChannels.restrictTextChannels #If disallowed channel
+        and (ctx.message.channel.id not in botChannels.allowedTextChannels)):
+        response = f"{bot.user.name} commands not allowed in {ctx.message.channel.name}"
+    elif checkVoiceChannel == True: 
+        try:
+            authorsChannel = ctx.message.author.voice.channel.id #Creating this variable checks that they're in a channel at all.
+            if (botChannels.restrictVoiceChannels #If disallowed voice channel
+                and (authorsChannel not in botChannels.allowedVoiceChannels)):
+                response = f"{bot.user.name} music playback not allowed in {ctx.message.author.voice.channel.name}"
+        except: #If user not in a visible voice channel
+            response = 'You do not appear to be in a voice channel'
+    if response != True: #Log error and turn response into a bool for return
+        print(response) #TODO logging
+        await ctx.message.channel.send(f"{ctx.message.author.mention} {response}")
+        response = False
     return response
 
 async def stopUpdates(gracefully = False):
@@ -156,7 +165,10 @@ async def stopUpdates(gracefully = False):
 
 async def stopConnection():
     await current.voiceChannel.disconnect()
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
+    await setDefaultActivity()
+
+async def setDefaultActivity():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f" for `{options.botPrefix}play`"))
 
 def loadOpus():
     opusStatus = "Failed"
@@ -195,18 +207,18 @@ async def on_ready():
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
     opusStatus = loadOpus()
+    await bot.user.edit(username=options.botName)
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     print(loginReport)
     print(f"Opus: {opusStatus}")
     if botChannels.enableLogChannel:
         await bot.get_channel(botChannels.logChannel).send(loginReport)
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=" for commands"))
+    await setDefaultActivity()
 
 @bot.command(aliases=['p'])
 async def play(ctx, station = 'help'):
-    """`rw.play <channel name>` to start radio"""
-    isValidChannel = validChannelCheck(ctx)
-    if isValidChannel == True:
+    """Starts radio playback"""
+    if await validChannelCheck(ctx, checkVoiceChannel = True):
         channelList = getChannelList()
         if station.lower() in channelList:
             stationNumber = channelList.index(station.lower())
@@ -226,27 +238,33 @@ async def play(ctx, station = 'help'):
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
                 updatePlaying.start()  
-        elif (station.lower() == 'help' or 'list'):
-            await ctx.send(f"available channels: {channelList}")
+        elif (station.lower() == ('help' or 'list')):
+            await ctx.send(f"To start playback use `{options.botPrefix}play` followed by one of the available channels: {channelList}"
+                            f"\nExample: `{options.botPrefix}play {channelList[0]}`")
         else:
-            await ctx.send("Station not found, use `rw.help` for more info")
-            print(station)
-    else:
-        await ctx.message.channel.send(isValidChannel)
-        print(isValidChannel)
-    
+            await ctx.send(f"Station not found, use `{options.botPrefix}play help` for more info")
 
 @bot.command(aliases=['leave','s']) ##, 'stop'
 async def stop(ctx):
     """Stops radio"""
-    await stopUpdates()
-    await stopConnection()
+    try:
+        if current.voiceChannel.is_playing():
+            if (await validChannelCheck(ctx)):
+                await stopUpdates()
+                await stopConnection()
+    except:
+        print("invalid stop command")
 
 @bot.command(aliases=['np','whatson','wo','queue','q'])
 async def nowplaying(ctx, station = None):
     """New message with playback info"""
-    await postCurrentlyListening(stopping=True)
-    await postCurrentlyListening(ctx)
+    try:
+        if current.voiceChannel.is_playing():
+            if (await validChannelCheck(ctx)):
+                await postCurrentlyListening(stopping=True)
+                await postCurrentlyListening(ctx)
+    except:
+        print("invalid nowplaying command")
 
 @bot.command()
 async def test(ctx):
@@ -265,4 +283,4 @@ async def ping(ctx):
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
     print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
-bot.run(private.dicordBotToken)
+bot.run(private.discordBotToken)

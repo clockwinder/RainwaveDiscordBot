@@ -16,7 +16,7 @@ class botChannels:
 
 class private:
     #Discord bot token
-    dicordBotToken = 'iV7B9T0d3hikb331nmGsvgHPGAv8jwFV3gKFs9eRonF4lgje68ZdrEX9aSJ'
+    discordBotToken = 'iV7B9T0d3hikb331nmGsvgHPGAv8jwFV3gKFs9eRonF4lgje68ZdrEX9aSJ'
     
     #Rainwave API ID
     rainwaveID = 12345
@@ -31,8 +31,13 @@ class dependencies:
     #Location of opus file.
     opus = ""
 
-
 class options:
+    #Change the name of your bot here
+    botName = "Rain.Wave"
+
+    #Change the prefix of your bot here
+    botPrefix = "rw."
+
     #Enables display of song progress in a numerical style timer e.g. [01:05/01:21]
     enableProgressTimes = True
     
