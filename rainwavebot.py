@@ -69,7 +69,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
             print('.', end ="")
     except Exception as returnedException:
         print(f"postCurrentlyListening error: {returnedException}")
-        traceback.print_exc() #Updated to traceback2, is this needed
+        traceback.print_exc()
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
