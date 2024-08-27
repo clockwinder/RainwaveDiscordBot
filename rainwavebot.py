@@ -283,4 +283,4 @@ async def ping(ctx):
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
     print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
-bot.run(private.dicordBotToken)
+bot.run(private.discordBotToken)
