@@ -48,7 +48,7 @@ def getChannelList():
 
 def checkSyncThreadIsAlive():
     try:
-        threadIsAlive = current.selectedStream._sync_thread.is_alive()
+        current.selectedStream._sync_thread.is_alive()
     except Exception as returnedException:
         #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
         #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
