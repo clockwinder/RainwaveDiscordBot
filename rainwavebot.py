@@ -242,7 +242,7 @@ async def play(ctx, station = 'help'):
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
-                current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
+                current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.ogg_stream))
 
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
