@@ -46,30 +46,34 @@ def getChannelList():
         tempArray.append(entries.key)
     return tempArray
 
-async def postCurrentlyListening(ctx = None, stopping=False):
-    try: 
+def checkSyncThreadIsAlive():
+    try:
         current.selectedStream._sync_thread.is_alive()
-        newMetaData = fetchMetaData()
-        if (current.playing is None
-            or current.playing.id != newMetaData.id): #This function is only for logging
-            current.playing = newMetaData
-            print('')
-            print(f"{current.playing} // {current.playing.id}", end ="")
-        else:
-            current.playing = newMetaData
-        tempEmbed = nowPlayingEmbed(newMetaData)
-        if stopping: #If stopping, send final update
-            tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
-            await current.message.edit(embed=tempEmbed.embed)
-            print('') #Newline so the "..." ends on a line break
-        elif ctx != None: #If passed context (done when a new message is wanted), create new message
-            current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
-        else: #Otherwise, edit old message
-            await current.message.edit(embed=tempEmbed.embed)
-            print('.', end ="")
     except Exception as returnedException:
-        print(f"postCurrentlyListening error: {returnedException}")
-        traceback.print_exc()
+        #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
+        #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
+        current.selectedStream.start_sync()
+
+async def postCurrentlyListening(ctx = None, stopping=False):
+    checkSyncThreadIsAlive()
+    newMetaData = fetchMetaData()
+    if (current.playing is None
+        or current.playing.id != newMetaData.id): #This function is only for logging
+        current.playing = newMetaData
+        print('')
+        print(f"{current.playing} // {current.playing.id}", end ="")
+    else:
+        current.playing = newMetaData
+    tempEmbed = nowPlayingEmbed(newMetaData)
+    if stopping: #If stopping, send final update
+        tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
+        await current.message.edit(embed=tempEmbed.embed)
+        print('') #Newline so the "..." ends on a line break
+    elif ctx != None: #If passed context (done when a new message is wanted), create new message
+        current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
+    else: #Otherwise, edit old message
+        await current.message.edit(embed=tempEmbed.embed)
+        print('.', end ="")
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
@@ -87,6 +91,11 @@ def setTimes():
 
 def generateProgressBar(metaData, stopping=False):
     times = setTimes()
+    #The below checks for rainwave issues. If their system fails, the current track "plays" forever.
+    if times.timeSinceStart.seconds > metaData.length: #Check int to int value
+        timeSinceStartInSeconds = metaData.length #If time is too long, set max.
+    else: #Else just do a seconds conversion.
+        timeSinceStartInSeconds = times.timeSinceStart.seconds 
     if ((options.enableProgressBar == False
         and options.enableProgressTimes == False)
         or stopping == True):
@@ -94,8 +103,8 @@ def generateProgressBar(metaData, stopping=False):
     if options.enableProgressTimes == False:
         timer = ''
     else:
-        timer = f"`[{formatSecondsToMinutes(times.timeSinceStart.seconds)}/{formatSecondsToMinutes(metaData.length)}]`"
-    progress = int(options.progressBarLength * (times.timeSinceStart.seconds/metaData.length))
+        timer = f"`[{formatSecondsToMinutes(timeSinceStartInSeconds)}/{formatSecondsToMinutes(metaData.length)}]`"
+    progress = int(options.progressBarLength * (timeSinceStartInSeconds/metaData.length))
     if options.enableProgressBar == False:
         progressBar = ''
     elif options.progressBarStyle == 1: #Left to right "fill"
@@ -234,7 +243,7 @@ async def play(ctx, station = 'help'):
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
                 current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
-                current.selectedStream.start_sync() #print(selectedStream.client.call('sync', {'resync': 'true', 'sid': selectedStream.id}).keys())
+
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
                 updatePlaying.start()  
