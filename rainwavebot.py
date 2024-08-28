@@ -242,7 +242,7 @@ async def play(ctx, station = 'help'):
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
-                probedAudioStream = await discord.FFmpegOpusAudio.from_probe(current.selectedStream.ogg_stream)
+                probedAudioStream = await discord.FFmpegOpusAudio.from_probe(current.selectedStream.ogg_stream, method='fallback')
                 current.voiceChannel.play(probedAudioStream)
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
