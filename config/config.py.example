@@ -16,7 +16,7 @@ class botChannels:
 
 class private:
     #Discord bot token
-    discordBotToken = 'iV7B9T0d3hikb331nmGsvgHPGAv8jwFV3gKFs9eRonF4lgje68ZdrEX9aSJ'
+    discordBotToken = 'F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ'
     
     #Rainwave API ID
     rainwaveID = 12345
