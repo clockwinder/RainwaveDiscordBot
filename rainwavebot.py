@@ -50,12 +50,12 @@ def checkSyncThreadIsAlive():
     try:
         if current.selectedStream._sync_thread.is_alive() == False:
             current.selectedStream.start_sync()
-            print("RW Sync Restarted")
+            print("RW Sync Restarted") #TODO Logging
     except Exception as returnedException:
         #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
         #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
         current.selectedStream.start_sync()
-        print("RW Sync Started")
+        print("RW Sync Started") #TODO Logging
 
 async def postCurrentlyListening(ctx = None, stopping=False):
     checkSyncThreadIsAlive()
