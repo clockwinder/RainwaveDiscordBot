@@ -48,11 +48,14 @@ def getChannelList():
 
 def checkSyncThreadIsAlive():
     try:
-        current.selectedStream._sync_thread.is_alive()
+        if current.selectedStream._sync_thread.is_alive() == False:
+            current.selectedStream.start_sync()
+            print("RW Sync Restarted") #TODO Logging
     except Exception as returnedException:
         #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
         #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
         current.selectedStream.start_sync()
+        print("RW Sync Started") #TODO Logging
 
 async def postCurrentlyListening(ctx = None, stopping=False):
     checkSyncThreadIsAlive()
@@ -242,8 +245,8 @@ async def play(ctx, station = 'help'):
             if current.voiceChannel.is_playing():
                 await ctx.send(f"Already playing {fetchMetaData().album.channel.name} Radio")
             else:
-                current.voiceChannel.play(discord.FFmpegPCMAudio(executable=dependencies.ffmpeg, source=current.selectedStream.mp3_stream))
-
+                probedAudioStream = await discord.FFmpegOpusAudio.from_probe(current.selectedStream.ogg_stream)
+                current.voiceChannel.play(probedAudioStream)
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name=f"{fetchMetaData().album.channel.name} Radio"))
                 await postCurrentlyListening(ctx)
                 updatePlaying.start()  
