@@ -12,7 +12,7 @@ import aiocron
 import discord
 from discord.ext import commands
 from discord.ext import tasks
-import nacl #This import is not required, but provides `requirements.txt` clarity, and use of pipreqs.
+import nacl #This import is not required, but provides `requirements.txt` clarity, and use of `pipreqs`.
 from rainwaveclient import RainwaveClient #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 #We're also importing `PyNaCl`, I don't know how discord.py uses it without an import.
 
