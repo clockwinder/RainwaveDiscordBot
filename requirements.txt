@@ -1,7 +1,8 @@
 #A list of dependencies for rainwavebot.py
 
+#The first three were found using `pipreqs`, is that a good choice?  It did miss PyNaCl.
 aiocron==1.8
 discord.py==2.4.0
 python_rainwave_client==2024.2
-#Needs PyNaCl==1.5.0
+#Needs PyNaCl==1.5.0 #I got this by using `pip show pynacl`, but it's not in the imports and if I hadn't known what would I do?  Just follow the error?
 #Maybe more?
