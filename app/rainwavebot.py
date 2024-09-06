@@ -132,7 +132,7 @@ def generateProgressBar(metaData, stopping=False):
 def nowPlayingEmbed(metaData, stopping=False):
     class formatedEmbed:
         syncThreadStatus = current.selectedStream._sync_thread.is_alive()
-        rainwaveLogo = discord.File("data/logo.png", filename="logo.png")
+        rainwaveLogo = discord.File("app/data/logo.png", filename="logo.png")
         if stopping:
             intro = 'Stopped playing'
         else:
