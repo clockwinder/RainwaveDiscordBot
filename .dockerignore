@@ -1,5 +1,11 @@
 # .dockerignore
 
+# Docker
+docker-compose.yml
+Dockerfile
+.docker
+.dockerignore
+
 # Cached Files #
 ################
 *.pyc
