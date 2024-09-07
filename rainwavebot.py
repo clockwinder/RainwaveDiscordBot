@@ -1,20 +1,25 @@
-import discord
-import time
-import asyncio
-import random
-import os
-import traceback
+#Built in libraries
+import time #Built in
+import asyncio #Built in
+import random #Built in
+import os #Built in
+import traceback #Built in
+#import logging #Built in
+from datetime import datetime, timedelta, timezone #Built in
+
+#Libraries to install
 import aiocron
-#import logging
+import discord
 from discord.ext import commands
 from discord.ext import tasks
-from datetime import datetime, timedelta, timezone
+import nacl #This import is not required, but provides `requirements.txt` clarity, and use of `pipreqs`.
+from rainwaveclient import RainwaveClient #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
+
+#Local imports
 from config.config import botChannels
 from config.config import private
 from config.config import dependencies
 from config.config import options
-from rainwaveclient import RainwaveClient 
-#Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 MINIMUM_REFRESH_DELAY = 6
 
