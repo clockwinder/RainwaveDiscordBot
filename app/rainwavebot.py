@@ -13,7 +13,7 @@ import discord
 from discord.ext import commands
 from discord.ext import tasks
 import nacl #This import is not required, but provides `requirements.txt` clarity, and use of `pipreqs`.
-from rainwaveclient import RainwaveClient #Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
+from rainwaveclient import RainwaveClient #NOTE Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #Local imports
 from config.config import botChannels
