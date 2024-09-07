@@ -1,0 +1,6 @@
+# .dockerignore
+
+# Cached Files #
+################
+*.pyc
+**/__pycache__
