@@ -1,5 +1,10 @@
 # .dockerignore
 
+# Git
+.git
+.gitignore
+.gitattributes
+
 # Docker
 docker-compose.yml
 Dockerfile
@@ -7,6 +12,8 @@ Dockerfile
 .dockerignore
 
 # Cached Files #
-################
 *.pyc
 **/__pycache__
+
+# Documentation
+README.md
