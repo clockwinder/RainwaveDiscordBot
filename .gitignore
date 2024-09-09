@@ -40,6 +40,7 @@ Thumbs.db
 #################
 private.py
 config.py
+config.py.bak
 
 # Docker
 docker-compose.yaml
