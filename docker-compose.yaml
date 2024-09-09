@@ -1,7 +1,0 @@
-services:
-  app:
-    build: .
-    container_name: rainwaveTesting
-    command: sh -c "tail -f /dev/null" #python /app/rainwavebot.py --reload
-    volumes:
-      - .:/app
