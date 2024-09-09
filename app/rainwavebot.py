@@ -29,10 +29,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-rainwaveClient = RainwaveClient()
-rainwaveClient.user_id = login.rainwaveID
-rainwaveClient.key = login.rainwaveKey
-
 bot = commands.Bot(command_prefix=options.botPrefix, 
     description=f"rainwave.cc bot, in development by Roach\nUse `{options.botPrefix}play` to get started", intents=intents)
 
@@ -301,6 +297,10 @@ async def ping(ctx):
     """Displays the bot's ping"""
     print (f'Pong! {round(bot.latency * 1000)}ms')
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
+
+rainwaveClient = RainwaveClient()
+rainwaveClient.user_id = login.rainwaveID
+rainwaveClient.key = login.rainwaveKey
 
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
