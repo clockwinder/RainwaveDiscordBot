@@ -39,9 +39,9 @@ class current:
     message = None
 
 class login:
-    discordBotToken = os.getenv("DISCORD_TOKEN", private.discordBotToken)
-    rainwaveID = os.getenv("RAINWAVE_ID", private.rainwaveID)
-    rainwaveKey = os.getenv("RAINWAVE_KEY", private.rainwaveKey)
+    discordBotToken = os.getenv("DISCORD_TOKEN", default=private.discordBotToken)
+    rainwaveID = os.getenv("RAINWAVE_ID", default=private.rainwaveID)
+    rainwaveKey = os.getenv("RAINWAVE_KEY", default=private.rainwaveKey)
 
 def fetchMetaData():
     return current.selectedStream.schedule_current.songs[0]
@@ -305,4 +305,5 @@ rainwaveClient.key = login.rainwaveKey
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
     print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
+print(f"Our token is: {login.discordBotToken}")
 bot.run(login.discordBotToken)
