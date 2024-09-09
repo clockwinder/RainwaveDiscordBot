@@ -30,8 +30,8 @@ intents.message_content = True
 intents.members = True
 
 rainwaveClient = RainwaveClient()
-rainwaveClient.user_id = rainwaveID
-rainwaveClient.key = rainwaveKey
+rainwaveClient.user_id = login.rainwaveID
+rainwaveClient.key = login.rainwaveKey
 
 bot = commands.Bot(command_prefix=options.botPrefix, 
     description=f"rainwave.cc bot, in development by Roach\nUse `{options.botPrefix}play` to get started", intents=intents)
@@ -305,4 +305,4 @@ async def ping(ctx):
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
     print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
-bot.run(private.discordBotToken)
+bot.run(login.discordBotToken)
