@@ -30,8 +30,8 @@ intents.message_content = True
 intents.members = True
 
 rainwaveClient = RainwaveClient()
-rainwaveClient.user_id = private.rainwaveID
-rainwaveClient.key = private.rainwaveKey
+rainwaveClient.user_id = rainwaveID
+rainwaveClient.key = rainwaveKey
 
 bot = commands.Bot(command_prefix=options.botPrefix, 
     description=f"rainwave.cc bot, in development by Roach\nUse `{options.botPrefix}play` to get started", intents=intents)
@@ -41,6 +41,11 @@ class current:
     selectedStream = None
     playing = None
     message = None
+
+class login:
+    discordBotToken = os.getenv("DISCORD_TOKEN", private.discordBotToken)
+    rainwaveID = os.getenv("RAINWAVE_ID", private.rainwaveID)
+    rainwaveKey = os.getenv("RAINWAVE_KEY", private.rainwaveKey)
 
 def fetchMetaData():
     return current.selectedStream.schedule_current.songs[0]
