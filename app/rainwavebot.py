@@ -4,7 +4,8 @@ import asyncio #Built in
 import random #Built in
 import os #Built in
 import traceback #Built in
-#import logging #Built in
+import logging #Built in
+from sys import stdout
 from datetime import datetime, timedelta, timezone #Built in
 
 #Libraries to install
@@ -21,10 +22,19 @@ from config.config import private
 from config.config import dependencies
 from config.config import options
 
+#Global Constants
 MINIMUM_REFRESH_DELAY = 6
 
-#logging.basicConfig(level=logging.DEBUG)
+#Set Up logger
+logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
+logger.setLevel(logging.DEBUG) # set logger level
+logFormatter = logging.Formatter\
+("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s") #What the log string looks like
+consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
+consoleHandler.setFormatter(logFormatter) #Apply the formatter
+logger.addHandler(consoleHandler) #Apply stdout handler to logger
 
+#Discord Permissions
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -227,7 +237,7 @@ async def on_ready():
     opusStatus = loadOpus()
     await bot.user.edit(username=options.botName)
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
-    print(loginReport)
+    logger.info(loginReport)
     print(f"Opus: {opusStatus}")
     if botChannels.enableLogChannel:
         await bot.get_channel(botChannels.logChannel).send(loginReport)
