@@ -27,12 +27,20 @@ MINIMUM_REFRESH_DELAY = 6
 
 #Set Up logger
 logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
-logger.setLevel(logging.options.logLevel) # set logger level via config
+logger.setLevel(options.logLevel) # set logger level via config
 logFormatter = logging.Formatter\
 ("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s") #What the log string looks like
 consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
 consoleHandler.setFormatter(logFormatter) #Apply the formatter
 logger.addHandler(consoleHandler) #Apply stdout handler to logger
+#Set Up LoggerAddon
+loggerAddon = logging.getLogger('RWDB_LoggerAddon')
+loggerAddon.setLevel(options.logLevel)
+logFormatter = logging.Formatter("%(message)s")
+consoleHandler = logging.StreamHandler(stdout)
+consoleHandler.setFormatter(logFormatter)
+consoleHandler.terminator = ""
+loggerAddon.addHandler(consoleHandler)
 
 #Discord Permissions
 intents = discord.Intents.default()
@@ -81,7 +89,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         or current.playing.id != newMetaData.id): #This function is only for logging
         current.playing = newMetaData
         logger.info('')
-        logger.info(f"{current.playing} // {current.playing.id}", end ="")
+        loggerAddon.info(f"{current.playing} // {current.playing.id}")
     else:
         current.playing = newMetaData
     tempEmbed = nowPlayingEmbed(newMetaData)
@@ -93,7 +101,7 @@ async def postCurrentlyListening(ctx = None, stopping=False):
         current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
     else: #Otherwise, edit old message
         await current.message.edit(embed=tempEmbed.embed)
-        logger.info('.', end ="")
+        loggerAddon.info('.')
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
