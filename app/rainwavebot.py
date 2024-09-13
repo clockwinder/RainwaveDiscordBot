@@ -67,12 +67,12 @@ def checkSyncThreadIsAlive():
     try:
         if current.selectedStream._sync_thread.is_alive() == False:
             current.selectedStream.start_sync()
-            print("RW Sync Restarted") #TODO Logging
+            logger.info("RW Sync Restarted") #TODO Logging
     except Exception as returnedException:
         #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
         #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
         current.selectedStream.start_sync()
-        print("RW Sync Started") #TODO Logging
+        logger.info("RW Sync Started") #TODO Logging
 
 async def postCurrentlyListening(ctx = None, stopping=False):
     checkSyncThreadIsAlive()
@@ -80,20 +80,20 @@ async def postCurrentlyListening(ctx = None, stopping=False):
     if (current.playing is None
         or current.playing.id != newMetaData.id): #This function is only for logging
         current.playing = newMetaData
-        print('')
-        print(f"{current.playing} // {current.playing.id}", end ="")
+        logger.info('')
+        logger.info(f"{current.playing} // {current.playing.id}", end ="")
     else:
         current.playing = newMetaData
     tempEmbed = nowPlayingEmbed(newMetaData)
     if stopping: #If stopping, send final update
         tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
         await current.message.edit(embed=tempEmbed.embed)
-        print('') #Newline so the "..." ends on a line break
+        logger.info('') #Newline so the "..." ends on a line break
     elif ctx != None: #If passed context (done when a new message is wanted), create new message
         current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
     else: #Otherwise, edit old message
         await current.message.edit(embed=tempEmbed.embed)
-        print('.', end ="")
+        logger.info('.', end ="")
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
@@ -177,7 +177,7 @@ async def validChannelCheck(ctx, checkVoiceChannel = False):
         except: #If user not in a visible voice channel
             response = 'You do not appear to be in a voice channel'
     if response != True: #Log error and turn response into a bool for return
-        print(response) #TODO logging
+        logger.debug(f"Valid Channel Check: {response}") #TODO logging
         await ctx.message.channel.send(f"{ctx.message.author.mention} {response}")
         response = False
     return response
@@ -206,7 +206,7 @@ def loadOpus():
             discord.opus.load_opus(dependencies.opus)
             opusStatus = "Initialized"
         except Exception as returnedException:
-            print(f"Opus loading error error: {returnedException}")
+            logger.warn(f"Opus loading error error: {returnedException}")
     else:
         opusStatus = "Pre-Loaded"
     return(opusStatus)
@@ -224,7 +224,7 @@ async def updatePlaying():
     usersPresent = checkUserPresence()
     if ((usersPresent == False)
          and (options.autoDisconnect == True)):
-        print("All alone, disconnecting")
+        logger.info("All alone, disconnecting")
         await stopUpdates(gracefully = True)
         await stopConnection()
     else:
@@ -239,7 +239,7 @@ async def on_ready():
     await bot.user.edit(username=options.botName)
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     logger.info(loginReport)
-    print(f"Opus: {opusStatus}")
+    logger.debug(f"Opus: {opusStatus}")
     if botChannels.enableLogChannel:
         await bot.get_channel(botChannels.logChannel).send(loginReport)
     await setDefaultActivity()
@@ -282,7 +282,7 @@ async def stop(ctx):
                 await stopUpdates()
                 await stopConnection()
     except:
-        print("invalid stop command")
+        logger.info("invalid stop command")
 
 @bot.command(aliases=['np','whatson','wo','queue','q'])
 async def nowplaying(ctx, station = None):
@@ -293,20 +293,16 @@ async def nowplaying(ctx, station = None):
                 await postCurrentlyListening(stopping=True)
                 await postCurrentlyListening(ctx)
     except:
-        print("invalid nowplaying command")
+        logger.info("invalid nowplaying command")
 
-@bot.command()
-async def test(ctx):
-    print('test')
-
-@bot.command()
-async def check(ctx):
-    await ctx.send(len(ctx.message.author.voice.channel.members))
+#@bot.command()
+#async def test(ctx): #Used for testing
+#    logger.info('test')
 
 @bot.command()
 async def ping(ctx):
     """Displays the bot's ping"""
-    print (f'Pong! {round(bot.latency * 1000)}ms')
+    logger.info(f'Pong! {round(bot.latency * 1000)}ms')
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
 #Set up rainwave client
@@ -316,6 +312,5 @@ rainwaveClient.key = login.rainwaveKey
 
 if options.refreshDelay < MINIMUM_REFRESH_DELAY:
     options.refreshDelay = MINIMUM_REFRESH_DELAY
-    print(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
-print(f"Our token is: {login.discordBotToken}")
+    logger.warning(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
 bot.run(login.discordBotToken) #Start Bot
