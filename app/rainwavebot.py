@@ -27,7 +27,7 @@ MINIMUM_REFRESH_DELAY = 6
 
 #Set Up logger
 logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
-logger.setLevel(logging.DEBUG) # set logger level
+logger.setLevel(logging.options.logLevel) # set logger level via config
 logFormatter = logging.Formatter\
 ("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s") #What the log string looks like
 consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
