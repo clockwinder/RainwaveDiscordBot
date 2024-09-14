@@ -75,12 +75,12 @@ def checkSyncThreadIsAlive():
     try:
         if current.selectedStream._sync_thread.is_alive() == False:
             current.selectedStream.start_sync()
-            logger.info("RW Sync Restarted") #TODO Logging
+            logger.info("RW Sync Restarted")
     except Exception as returnedException:
         #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
         #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
         current.selectedStream.start_sync()
-        logger.info("RW Sync Started") #TODO Logging
+        logger.info("RW Sync Started")
 
 async def postCurrentlyListening(ctx = None, stopping=False):
     checkSyncThreadIsAlive()
@@ -185,7 +185,7 @@ async def validChannelCheck(ctx, checkVoiceChannel = False):
         except: #If user not in a visible voice channel
             response = 'You do not appear to be in a voice channel'
     if response != True: #Log error and turn response into a bool for return
-        logger.debug(f"Valid Channel Check: {response}") #TODO logging
+        logger.debug(f"Valid Channel Check: {response}")
         await ctx.message.channel.send(f"{ctx.message.author.mention} {response}")
         response = False
     return response
