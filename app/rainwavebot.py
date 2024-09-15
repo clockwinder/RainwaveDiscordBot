@@ -29,7 +29,7 @@ MINIMUM_REFRESH_DELAY = 6
 logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
 logger.setLevel(options.logLevel) # set logger level via config
 logFormatter = logging.Formatter\
-("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s") #What the log string looks like
+("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s", "%Y-%m-%d %H:%M:%S") #What the log string looks like
 consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
 consoleHandler.setFormatter(logFormatter) #Apply the formatter
 logger.addHandler(consoleHandler) #Apply stdout handler to logger
@@ -67,12 +67,12 @@ def checkSyncThreadIsAlive():
     try:
         if current.selectedStream._sync_thread.is_alive() == False:
             current.selectedStream.start_sync()
-            logger.info("RW Sync Restarted")
+            logger.debug("RW Sync Restarted")
     except Exception as returnedException:
         #print(f"checkSyncThreadIsAlive error: {returnedException}") #NOTE Not required here, but I want to keep it noted as an example.
         #traceback.print_exc() #NOTE Not required here, but I want to keep it noted as an example.
         current.selectedStream.start_sync()
-        logger.info("RW Sync Started")
+        logger.debug("RW Sync Started")
 
 async def postCurrentlyListening(ctx = None, stopping=False):
     checkSyncThreadIsAlive()
@@ -87,12 +87,11 @@ async def postCurrentlyListening(ctx = None, stopping=False):
     if stopping: #If stopping, send final update
         tempEmbed = nowPlayingEmbed(newMetaData, stopping=True)
         await current.message.edit(embed=tempEmbed.embed)
-        logger.info('') #Newline so the "..." ends on a line break
     elif ctx != None: #If passed context (done when a new message is wanted), create new message
         current.message = await ctx.send(file=tempEmbed.rainwaveLogo, embed=tempEmbed.embed)
     else: #Otherwise, edit old message
         await current.message.edit(embed=tempEmbed.embed)
-        logger.info(f'Currently Listening updated {current.playing.id}')
+        logger.debug(f'Currently Listening updated {current.playing.id}')
 
 def formatSecondsToMinutes(incomingSeconds):
     minutes = str(incomingSeconds // 60) #get minutes, .zfill requires a string
