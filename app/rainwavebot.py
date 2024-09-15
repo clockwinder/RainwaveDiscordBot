@@ -273,7 +273,7 @@ async def play(ctx, station = 'help'):
 
 @bot.command(aliases=['leave','s']) ##, 'stop'
 async def stop(ctx):
-    """Stops radio"""
+    """Stops radio playback"""
     try:
         if current.voiceChannel.is_playing():
             if (await validChannelCheck(ctx)):
