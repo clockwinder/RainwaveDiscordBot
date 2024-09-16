@@ -67,3 +67,6 @@ class options:
     
     #If set to `True`, bot will disconnect if no users are present in the bots voice channel.
     autoDisconnect = True
+
+    #Logging level, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL.  If INFO provides too much info, switch to WARNING
+    logLevel = "INFO"
