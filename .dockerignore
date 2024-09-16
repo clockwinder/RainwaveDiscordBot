@@ -6,7 +6,7 @@
 .gitattributes
 
 # Docker
-docker-compose.yml
+docker-compose.yaml
 Dockerfile
 .docker
 .dockerignore
@@ -17,3 +17,6 @@ Dockerfile
 
 # Documentation
 README.md
+
+# Backup
+config.py.bak
