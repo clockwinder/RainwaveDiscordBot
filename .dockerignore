@@ -19,4 +19,4 @@ Dockerfile
 README.md
 
 # Backup
-config.py.bak
+**/config.py.bak
