@@ -14,3 +14,5 @@ ENV RAINWAVE_KEY=
 COPY . /rainwavediscordbot
 
 CMD [ "python", "./app/rainwavebot.py" ]
+
+#Build command `docker build -t rainwavetest .`
