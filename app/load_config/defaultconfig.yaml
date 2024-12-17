@@ -10,7 +10,7 @@ botChannels:
   allowedTextChannels: [112233445566778899, 998877665544332211]
   
   #If you want the bot to log, login and error info in a channel, set below to True
-  enableLogChannel: True
+  enableLogChannel: False
   #If above is set to true, list your logging channel ID below
   logChannel: 246813579024681357
 
