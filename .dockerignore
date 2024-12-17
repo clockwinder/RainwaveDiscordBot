@@ -18,5 +18,10 @@ Dockerfile
 # Documentation
 README.md
 
+#User Data
+userconfig.yaml
+exampleconfig.yaml
+/user_config
+
 # Backup
 **/config.py.bak

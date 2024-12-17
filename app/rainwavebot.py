@@ -17,13 +17,18 @@ import nacl #This import is not required, but provides `requirements.txt` clarit
 from rainwaveclient import RainwaveClient #NOTE Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #Local imports
-from config.config import botChannels
-from config.config import private
-from config.config import dependencies
-from config.config import options
+import load_config.load_config
+#from config.config import botChannels
+#from config.config import private
+#from config.config import dependencies
+#from config.config import options
 
 #Global Constants
 MINIMUM_REFRESH_DELAY = 6
+
+#Load Config
+config = load_config.load_config.config(os.path.dirname(os.path.abspath(__file__)))
+print(config.config["botPrefix"])
 
 #Set Up logger
 logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
