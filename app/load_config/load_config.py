@@ -2,7 +2,7 @@ import os
 import shutil
 import yaml #Needs to be added to docker setup.
 
-OS_SLASH = '\\'
+OS_SLASH = '/'
 USER_CONFIG_FOLDER = f"{OS_SLASH}user_config"
 DEFAULT_CONFIG_PATH = f"{OS_SLASH}load_config{OS_SLASH}defaultconfig.yaml"
 EXAMPLE_CONFIG_PATH = f"{USER_CONFIG_FOLDER}{OS_SLASH}exampleconfig.yaml"
