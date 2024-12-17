@@ -24,8 +24,8 @@ MINIMUM_REFRESH_DELAY = 6
 
 #Load Config
 config = load_config.load_config.config(os.path.dirname(os.path.abspath(__file__)))
-config = config.config #Move the dict out of a class, saves characters.
-print(config["botPrefix"])
+#config = config.config #Move the dict out of a class, saves characters.
+#print(config["botPrefix"])
 #Format for fetching config settings is `config.config["botPrefix"]`
 
 #Set Up logger
