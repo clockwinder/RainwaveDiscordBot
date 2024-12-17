@@ -26,10 +26,10 @@ private:
     
 dependencies:
   #Location of FFMPEG file.
-  ffmpeg: "/usr/bin/ffmpeg"
+  ffmpegLocation: "/usr/bin/ffmpeg"
   
   #Location of opus file.
-  opus: "/usr/lib/libopus.so.0"
+  opusLocation: "/usr/lib/libopus.so.0"
 
 options:
   #Change the name of your bot here
