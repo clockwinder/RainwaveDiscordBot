@@ -8,8 +8,8 @@ DEFAULT_CONFIG_PATH = f"{OS_SLASH}load_config{OS_SLASH}defaultconfig.yaml"
 EXAMPLE_CONFIG_PATH = f"{USER_CONFIG_FOLDER}{OS_SLASH}exampleconfig.yaml"
 USER_CONFIG_PATH = f"{USER_CONFIG_FOLDER}{OS_SLASH}userconfig.yaml"
 
-EXAMPLE_CONFIG_MESSAGE = "#This is the example config file. It is recreated on every launch.\n#ALL DATA STORE HERE IS DELETED!!!"
-USER_CONFIG_MESSAGE = "#This is the user config file, changes here are persistent.\n#If you delete this file, it will be recreated and all default values will be restored."
+EXAMPLE_CONFIG_MESSAGE = "#This is the example config file. It is recreated on every launch.\n#ALL DATA STORED IN THIS FILE WILL BE DELETED!!!"
+USER_CONFIG_MESSAGE = "#This is the user config file, changes to this file are persistent.\n#If you delete this file, it will be recreated and all default values will be restored."
 
 class config:
     def __init__(self, startingPath):
