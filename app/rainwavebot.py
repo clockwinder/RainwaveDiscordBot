@@ -5,7 +5,6 @@ import random #Built in
 import os #Built in
 import traceback #Built in
 import logging #Built in
-from sys import stdout
 from datetime import datetime, timedelta, timezone #Built in
 
 #Libraries to install
@@ -25,17 +24,10 @@ MINIMUM_REFRESH_DELAY = 6
 #Load Config
 config = load_config.load_config.config(os.path.dirname(os.path.abspath(__file__)))
 #config = config.config #Move the dict out of a class, saves characters.
-#print(config["botPrefix"])
 #Format for fetching config settings is `config.config["botPrefix"]`
 
 #Set Up logger
-logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
-logger.setLevel(config.config["logLevel"]) # set logger level via config
-logFormatter = logging.Formatter\
-("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s", "%Y-%m-%d %H:%M:%S") #What the log string looks like
-consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
-consoleHandler.setFormatter(logFormatter) #Apply the formatter
-logger.addHandler(consoleHandler) #Apply stdout handler to logger
+from logger import logger
 
 #Discord Permissions
 intents = discord.Intents.default()
