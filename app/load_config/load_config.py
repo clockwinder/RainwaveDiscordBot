@@ -1,6 +1,7 @@
 import os
 import shutil
 import yaml #Needs to be added to docker setup.
+from logger import logger
 
 OS_SLASH = '/'
 USER_CONFIG_FOLDER = f"{OS_SLASH}user_config"
@@ -17,48 +18,46 @@ class config:
         #NOTE this section fails on windows: `UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 1992: character maps to <undefined>` 
         #which can be fixed with `encoding='utf-8'` or by adding a windows environmental variable `PYTHONUTF8` with a value of `1`
             if os.path.isdir(startingPath+USER_CONFIG_FOLDER) is False: #Create /user_config if it doesn't exist
-                print(f"Creating {USER_CONFIG_FOLDER}")
+                logger.debug(f"Creating {USER_CONFIG_FOLDER}")
                 os.mkdir(startingPath+USER_CONFIG_FOLDER)
             else:
-                print(f"Located {USER_CONFIG_FOLDER}")
-            print(openDefaultFile)
+                logger.debug(f"Located {USER_CONFIG_FOLDER}")
+            logger.debug(f"Config file info: {openDefaultFile}")
             if os.path.isfile(startingPath+EXAMPLE_CONFIG_PATH):
-                print("Removing old exampleconfig.yaml")
+                logger.debug("Removing old exampleconfig.yaml")
                 os.remove(startingPath+EXAMPLE_CONFIG_PATH)
-            print("Creating exampleconfig.yaml")
+            logger.debug("Creating exampleconfig.yaml")
             with open(startingPath+EXAMPLE_CONFIG_PATH, 'a') as openExampleFile:
                 openExampleFile.write(f"{EXAMPLE_CONFIG_MESSAGE}\n\n") #write this comment into the first line
                 shutil.copyfileobj(openDefaultFile, openExampleFile) #append the default file to the example file
-            print("Created exampleconfig.yaml")
+            logger.debug("Created exampleconfig.yaml")
 
             openDefaultFile.seek(0) #This puts us back at the beginning of openDefaultFile, since we've already indexed to the end
 
-            print(startingPath+USER_CONFIG_PATH)
             if os.path.isfile(startingPath+USER_CONFIG_PATH):
-                print("Using previous userconfig.yaml")
+                logger.info("Using previous userconfig.yaml")
             else:
-                print("Creating userconfig.yaml")
+                logger.debug("Creating userconfig.yaml")
                 with open(startingPath+USER_CONFIG_PATH, 'a') as openUserFile:
                     openUserFile.write(f"{USER_CONFIG_MESSAGE}\n\n") #write this comment into the first line
                     shutil.copyfileobj(openDefaultFile, openUserFile) #append the default file to the user file
-                print("Created userconfig.yaml")
+                logger.info("Created userconfig.yaml")
         
-        print("Loading config files")
+        logger.info("Loading config files")
         with open(startingPath+DEFAULT_CONFIG_PATH, "r") as openDefaultFile:
             defaultconfig = yaml.safe_load(openDefaultFile)
         with open(startingPath+USER_CONFIG_PATH, "r") as openUserFile:
             userconfig = yaml.safe_load(openUserFile)
         self.config = {}
         for section, item in defaultconfig.items():
-            #print(f"{section} ------")
+            logger.debug(f"Loading {section} ------")
             for key, value in item.items():
                 try:
                     if key in userconfig[section]:
-                        #print(f"'{key}' found in userconfig")
+                        logger.debug(f"'{key}' found in userconfig")
                         self.config[key] = userconfig[section][key]
                     else:
-                        print(f"'{key}' not found in user config") #Warn
+                        logger.warning(f"'{key}' not found in user config, default loaded.") #Warn
                         self.config[key] = value
                 except:
-                    print(f"Config section {section} not found") #Error
-                #print(f"{key} : {value}")
+                    logger.warning(f"Config section {section} not found") #Warn
