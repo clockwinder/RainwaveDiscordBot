@@ -4,7 +4,7 @@ from sys import stdout
 
 #Possible log levels are, DEBUG, INFO, WARNING, ERROR, CRITICAL
 #Written as debug(), info(), warning(), error() and critical()
-logLevel = os.getenv("LOG_LEVEL", default="INFO") #Get loglevel environmental from docker
+logLevel = os.getenv("LOG_LEVEL", default="DEBUG") #Get loglevel environmental from docker
 
 #Set Up logger
 logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
