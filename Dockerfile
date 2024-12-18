@@ -10,6 +10,7 @@ RUN apk add opus
 ENV DISCORD_TOKEN=
 ENV RAINWAVE_ID=
 ENV RAINWAVE_KEY=
+ENV LOG_LEVEL="INFO"
 
 COPY . /rainwavediscordbot
 
