@@ -1,4 +1,5 @@
 ﻿# RainwaveDiscordBot
+RainwaveDiscordBot is currently in testing, and should not be used!
 
 Docker Compose Example:
 ```yaml
