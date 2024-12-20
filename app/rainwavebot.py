@@ -5,7 +5,6 @@ import random #Built in
 import os #Built in
 import traceback #Built in
 import logging #Built in
-from sys import stdout
 from datetime import datetime, timedelta, timezone #Built in
 
 #Libraries to install
@@ -17,22 +16,18 @@ import nacl #This import is not required, but provides `requirements.txt` clarit
 from rainwaveclient import RainwaveClient #NOTE Command to upgrade the rainwaveclient api: pip install -U python-rainwave-client
 
 #Local imports
-from config.config import botChannels
-from config.config import private
-from config.config import dependencies
-from config.config import options
+import load_config.load_config
 
 #Global Constants
 MINIMUM_REFRESH_DELAY = 6
 
+#Load Config
+config = load_config.load_config.config(os.path.dirname(os.path.abspath(__file__)))
+config = config.config #Move the dict out of a class, for a shorter variable.
+#Format for fetching config settings is `config["botPrefix"]`
+
 #Set Up logger
-logger = logging.getLogger('RWDB_Logger') #Create logger instance with an arbitrary name
-logger.setLevel(options.logLevel) # set logger level via config
-logFormatter = logging.Formatter\
-("%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)d %(message)s", "%Y-%m-%d %H:%M:%S") #What the log string looks like
-consoleHandler = logging.StreamHandler(stdout) #set streamhandler to stdout
-consoleHandler.setFormatter(logFormatter) #Apply the formatter
-logger.addHandler(consoleHandler) #Apply stdout handler to logger
+from logger import logger
 
 #Discord Permissions
 intents = discord.Intents.default()
@@ -40,8 +35,8 @@ intents.message_content = True
 intents.members = True
 
 #Create Bot instance w/ settings
-bot = commands.Bot(command_prefix=options.botPrefix, 
-    description=f"rainwave.cc bot, in development by Roach\nUse `{options.botPrefix}play` to get started", intents=intents)
+bot = commands.Bot(command_prefix=config["botPrefix"], 
+    description=f"rainwave.cc bot, in development by Roach\nUse `{config["botPrefix"]}play` to get started", intents=intents)
 
 class current:
     voiceChannel = None
@@ -50,9 +45,9 @@ class current:
     message = None
 
 class login:
-    discordBotToken = os.getenv("DISCORD_TOKEN", default=private.discordBotToken)
-    rainwaveID = os.getenv("RAINWAVE_ID", default=private.rainwaveID)
-    rainwaveKey = os.getenv("RAINWAVE_KEY", default=private.rainwaveKey)
+    discordBotToken = os.getenv("DISCORD_TOKEN", default=config["discordBotToken"])
+    rainwaveID = os.getenv("RAINWAVE_ID", default=config["rainwaveID"])
+    rainwaveKey = os.getenv("RAINWAVE_KEY", default=config["rainwaveKey"])
 
 def fetchMetaData():
     return current.selectedStream.schedule_current.songs[0]
@@ -114,25 +109,25 @@ def generateProgressBar(metaData, stopping=False):
         timeSinceStartInSeconds = metaData.length #If time is too long, set max.
     else: #Else just do a seconds conversion.
         timeSinceStartInSeconds = times.timeSinceStart.seconds 
-    if ((options.enableProgressBar == False
-        and options.enableProgressTimes == False)
+    if ((config["enableProgressBar"] == False
+        and config["enableProgressTimes"] == False)
         or stopping == True):
         return(None)
-    if options.enableProgressTimes == False:
+    if config["enableProgressTimes"] == False:
         timer = ''
     else:
         timer = f"`[{formatSecondsToMinutes(timeSinceStartInSeconds)}/{formatSecondsToMinutes(metaData.length)}]`"
-    progress = int(options.progressBarLength * (timeSinceStartInSeconds/metaData.length))
-    if options.enableProgressBar == False:
+    progress = int(config["progressBarLength"] * (timeSinceStartInSeconds/metaData.length))
+    if config["enableProgressBar"] == False:
         progressBar = ''
-    elif options.progressBarStyle == 1: #Left to right "fill"
-        progressBar = f"{options.progressBarCharacters[0] * progress}{options.progressBarCharacters[1] * (options.progressBarLength - progress)}"
-    elif options.progressBarStyle == 2: #Left to right indicator
-        progressBar = f"{options.progressBarCharacters[0] * (progress - 1)}{options.progressBarCharacters[1]}{options.progressBarCharacters[0] * (options.progressBarLength - progress)}"
+    elif config["progressBarStyle"] == 1: #Left to right "fill"
+        progressBar = f"{config["progressBarCharacters"][0] * progress}{config["progressBarCharacters"][1] * (config["progressBarLength"] - progress)}"
+    elif config["progressBarStyle"] == 2: #Left to right indicator
+        progressBar = f"{config["progressBarCharacters"][0] * (progress - 1)}{config["progressBarCharacters"][1]}{config["progressBarCharacters"][0] * (config["progressBarLength"] - progress)}"
     #TODO See if we can prevent the flickering from the formatting of Style3
-    #elif options.progressBarStyle == 3: #Left to right color fill
-    #    progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (options.progressBarLength - progress)}[0m{timer}\n```"
-    if options.enableProgressBar == True and options.enableProgressTimes == True:
+    #elif config["progressBarStyle"] == 3: #Left to right color fill
+    #    progressBar = f"```ansi\n[2;34m{options.progressBarChars[0] * progress}[0m[2;37m{options.progressBarChars[0] * (config["progressBarLength"] - progress)}[0m{timer}\n```"
+    if config["enableProgressBar"] == True and config["enableProgressTimes"] == True:
         spacer = ' '
     else:
         spacer = ''
@@ -150,7 +145,7 @@ def nowPlayingEmbed(metaData, stopping=False):
         embed = discord.Embed(title=f"{intro} Rainwave {metaData.album.channel.name} Radio", 
             url=current.selectedStream.url, 
             description=generateProgressBar(metaData, stopping), 
-            color = discord.Colour.from_rgb(options.embedColor[0],options.embedColor[1],options.embedColor[2]))
+            color = discord.Colour.from_rgb(config["embedColor"][0],config["embedColor"][1],config["embedColor"][2]))
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
@@ -163,14 +158,14 @@ def nowPlayingEmbed(metaData, stopping=False):
 
 async def validChannelCheck(ctx, checkVoiceChannel = False):
     response = True #Assume nothing is wrong
-    if (botChannels.restrictTextChannels #If disallowed channel
-        and (ctx.message.channel.id not in botChannels.allowedTextChannels)):
+    if (config["restrictTextChannels"] #If disallowed channel
+        and (ctx.message.channel.id not in config["allowedTextChannels"])):
         response = f"{bot.user.name} commands not allowed in {ctx.message.channel.name}"
     elif checkVoiceChannel == True: 
         try:
             authorsChannel = ctx.message.author.voice.channel.id #Creating this variable checks that they're in a channel at all.
-            if (botChannels.restrictVoiceChannels #If disallowed voice channel
-                and (authorsChannel not in botChannels.allowedVoiceChannels)):
+            if (config["restrictVoiceChannels"] #If disallowed voice channel
+                and (authorsChannel not in config["allowedVoiceChannels"])):
                 response = f"{bot.user.name} music playback not allowed in {ctx.message.author.voice.channel.name}"
         except: #If user not in a visible voice channel
             response = 'You do not appear to be in a voice channel'
@@ -195,13 +190,13 @@ async def stopConnection():
     await setDefaultActivity()
 
 async def setDefaultActivity():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f" for `{options.botPrefix}play`"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f" for `{config["botPrefix"]}play`"))
 
 def loadOpus():
     opusStatus = "Failed"
     if discord.opus.is_loaded() == False:
         try:
-            discord.opus.load_opus(dependencies.opus)
+            discord.opus.load_opus(config["opusLocation"])
             opusStatus = "Initialized"
         except Exception as returnedException:
             logger.warn(f"Opus loading error error: {returnedException}")
@@ -217,11 +212,11 @@ def checkUserPresence():
             break
     return(userPresent)
 
-@tasks.loop(seconds = options.refreshDelay) #TODO Determine if 6 is actually safe, and if we can go lower
+@tasks.loop(seconds = config["refreshDelay"]) #TODO Determine if 6 is actually safe, and if we can go lower
 async def updatePlaying():
     usersPresent = checkUserPresence()
     if ((usersPresent == False)
-         and (options.autoDisconnect == True)):
+         and (config["autoDisconnect"] == True)):
         logger.info("All alone, disconnecting")
         await stopUpdates(gracefully = True)
         await stopConnection()
@@ -234,12 +229,12 @@ async def on_ready():
     current_day = now.strftime("%d/%m/%y")
     current_time = now.strftime("%H:%M:%S")
     opusStatus = loadOpus()
-    await bot.user.edit(username=options.botName)
+    await bot.user.edit(username=config["botName"])
     loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     logger.info(loginReport)
     logger.debug(f"Opus: {opusStatus}")
-    if botChannels.enableLogChannel:
-        await bot.get_channel(botChannels.logChannel).send(loginReport)
+    if config["enableLogChannel"]:
+        await bot.get_channel(config["logChannel"]).send(loginReport)
     await setDefaultActivity()
 
 @bot.command(aliases=['p'])
@@ -266,10 +261,10 @@ async def play(ctx, station = 'help'):
                 await postCurrentlyListening(ctx)
                 updatePlaying.start()  
         elif (station.lower() == ('help' or 'list')):
-            await ctx.send(f"To start playback use `{options.botPrefix}play` followed by one of the available channels: {channelList}"
-                            f"\nExample: `{options.botPrefix}play {channelList[0]}`")
+            await ctx.send(f"To start playback use `{config["botPrefix"]}play` followed by one of the available channels: {channelList}"
+                            f"\nExample: `{config["botPrefix"]}play {channelList[0]}`")
         else:
-            await ctx.send(f"Station not found, use `{options.botPrefix}play help` for more info")
+            await ctx.send(f"Station not found, use `{config["botPrefix"]}play help` for more info")
 
 @bot.command(aliases=['leave','s']) ##, 'stop'
 async def stop(ctx):
@@ -308,7 +303,7 @@ rainwaveClient = RainwaveClient()
 rainwaveClient.user_id = login.rainwaveID
 rainwaveClient.key = login.rainwaveKey
 
-if options.refreshDelay < MINIMUM_REFRESH_DELAY:
-    options.refreshDelay = MINIMUM_REFRESH_DELAY
+if config["refreshDelay"] < MINIMUM_REFRESH_DELAY:
+    config["refreshDelay"] = MINIMUM_REFRESH_DELAY
     logger.warning(f"WARN refreshDelay overridden to: {MINIMUM_REFRESH_DELAY}")
 bot.run(login.discordBotToken) #Start Bot
