@@ -14,7 +14,7 @@ botChannels:
   #If above is set to True, list your logging channel ID below
   logChannel: 246813579024681357
 
-private:
+private: #This section is not used when running the bot as a docker container.
   #Discord bot token
   discordBotToken: F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
   
@@ -24,7 +24,7 @@ private:
   #Rainwave API Key
   rainwaveKey: 12345abcde
     
-dependencies:
+dependencies: #This section is not used when running the bot as a docker container.
   #Location of FFMPEG file.
   ffmpegLocation: "/usr/bin/ffmpeg"
   
