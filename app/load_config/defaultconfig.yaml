@@ -14,23 +14,6 @@ botChannels:
   #If above is set to True, list your logging channel ID below
   logChannel: 246813579024681357
 
-private: #This section is not used when running the bot as a docker container.
-  #Discord bot token
-  discordBotToken: F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
-  
-  #Rainwave API ID
-  rainwaveID: 12345
-  
-  #Rainwave API Key
-  rainwaveKey: 12345abcde
-    
-dependencies: #This section is not used when running the bot as a docker container.
-  #Location of FFMPEG file.
-  ffmpegLocation: "/usr/bin/ffmpeg"
-  
-  #Location of opus file.
-  opusLocation: "/usr/lib/libopus.so.0"
-
 options:
   #Change the name of your bot here
   botName: "Rain.Wave"
@@ -71,3 +54,20 @@ options:
   #The below logging level is not used when running the bot via Docker.
   #Logging level, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL.  If INFO provides too much info, switch to WARNING
   logLevel: "INFO"
+
+private: #This section is not used when running the bot as a docker container.
+  #Discord bot token
+  discordBotToken: F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
+  
+  #Rainwave API ID
+  rainwaveID: 12345
+  
+  #Rainwave API Key
+  rainwaveKey: 12345abcde
+    
+dependencies: #This section is not used when running the bot as a docker container.
+  #Location of FFMPEG file.
+  ffmpegLocation: "/usr/bin/ffmpeg"
+  
+  #Location of opus file.
+  opusLocation: "/usr/lib/libopus.so.0"
