@@ -1,0 +1,27 @@
+# .dockerignore
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+docker-compose.yaml
+Dockerfile
+.docker
+.dockerignore
+
+# Cached Files #
+*.pyc
+**/__pycache__
+
+# Documentation
+README.md
+
+#User Data
+userconfig.yaml
+exampleconfig.yaml
+/user_config
+
+# Backup
+**/config.py.bak
