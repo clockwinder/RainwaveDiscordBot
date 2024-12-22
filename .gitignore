@@ -38,12 +38,14 @@ Thumbs.db
 
 # Private Files #
 #################
-private.py
-config.py
+userconfig.yaml
+exampleconfig.yaml
+/user_config
 
-# Directories #
-###############
-ffmpeg-2021-11-22/
+# Docker
+docker-compose.yaml
+#Dockerfile
+.docker
 
 # Cached Files #
 ################
