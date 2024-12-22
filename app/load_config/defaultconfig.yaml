@@ -1,35 +1,18 @@
 botChannels:
   #To restrict which voice channels the bot can use, set below to true.
   restrictVoiceChannels: False
-  #If above is set to true, list allowed channel/s IDs in a list as shown below.
+  #If above is set to True, list allowed channel/s IDs in a list as shown below.
   allowedVoiceChannels: [123456789012345678, 987654321098765432]
   
-  #To restrict which test channels the bot can receive commands on, set below to true.
+  #To restrict which text channels the bot can receive commands on, set below to true.
   restrictTextChannels: False
-  #If above is set to true, list allowed channel/s IDs in a list as shown below.
+  #If above is set to True, list allowed channel/s IDs in a list as shown below.
   allowedTextChannels: [112233445566778899, 998877665544332211]
   
-  #If you want the bot to log, login and error info in a channel, set below to True
+  #If you want the bot to log items like login and error info in a channel, set below to True
   enableLogChannel: False
-  #If above is set to true, list your logging channel ID below
+  #If above is set to True, list your logging channel ID below
   logChannel: 246813579024681357
-
-private:
-  #Discord bot token
-  discordBotToken: F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
-  
-  #Rainwave API ID
-  rainwaveID: 12345
-  
-  #Rainwave API Key
-  rainwaveKey: 12345abcde
-    
-dependencies:
-  #Location of FFMPEG file.
-  ffmpegLocation: "/usr/bin/ffmpeg"
-  
-  #Location of opus file.
-  opusLocation: "/usr/lib/libopus.so.0"
 
 options:
   #Change the name of your bot here
@@ -61,12 +44,30 @@ options:
   #You can use https://it-tools.tech/color-converter to generate an rgb color value
   embedColor: [24, 135, 210]
   
-  #Numer of seconds between refresh of progress bar and timer, can be increased if user is being rate limited.
+  #Number of seconds between refresh of progress bar and timer, can be increased if user is being rate limited.
   #Minimum value can never be below 6.
   refreshDelay: 6
   
   #If set to `True`, bot will disconnect if no users are present in the bots voice channel.
   autoDisconnect: True
 
+  #The below logging level is not used when running the bot via Docker.
   #Logging level, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL.  If INFO provides too much info, switch to WARNING
   logLevel: "INFO"
+
+private: #This section is not used when running the bot as a docker container.
+  #Discord bot token
+  discordBotToken: F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
+  
+  #Rainwave API ID
+  rainwaveID: 12345
+  
+  #Rainwave API Key
+  rainwaveKey: 12345abcde
+    
+dependencies: #This section is not used when running the bot as a docker container.
+  #Location of FFMPEG file.
+  ffmpegLocation: "/usr/bin/ffmpeg"
+  
+  #Location of opus file.
+  opusLocation: "/usr/lib/libopus.so.0"
