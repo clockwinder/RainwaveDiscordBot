@@ -1,9 +1,9 @@
 ﻿# Rain.Wave Discord Bot
 RainwaveDiscordBot is currently in testing, and should not be used!
 
-Rain.Wave Discord Bot is a self hostable Discord Bot which allows live music from [rainwave.cc](https://rainwave.cc) to be played in voice channels.  It utilizes the [discord.py](https://github.com/Rapptz/discord.py) API wrapper and [Python Rainwave Client](https://github.com/williamjacksn/python-rainwave-client).
+Rain.Wave Discord Bot is a self hostable Discord Bot which allows live music from [rainwave.cc](https://rainwave.cc) to be played in voice channels.  It utilizes the [discord.py](https://github.com/Rapptz/discord.py) API wrapper and [Python Rainwave Client](https://github.com/williamjacksn/python-rainwave-client). The appearance of messages and functionality of the bot are configurable.
 
-Join the [Rain.Wave Discord Bot]() discord server to try it out!
+Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server to try it out!
 
 ## Install
 
@@ -13,22 +13,24 @@ services:
   rainwavediscordbot:
     container_name: rainwavediscordbot
     image: dockerhub?
-    #user: 1000:100 #Optional
+    #user: 1000:100 #Optional #NOTE not currently functional, but intended
     environment:
       - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
       - RAINWAVE_ID=12345
       - RAINWAVE_KEY=12345abcde
-      #- TZ=America/Los_Angeles #Optional
+      #- TZ=America/Los_Angeles #Optional, sets timezone for logging
       #- LOG_LEVEL=INFO #Optional, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL
+    
+    #The below two lines are optional, uncomment to allow custom configuration files.
     #volumes:
-      #- "/path/to/local/dir:/rainwavediscordbot/app/user_config" #Optional, to use this line, also uncomment `#volumes:`
+      #- "/path/to/local/dir:/rainwavediscordbot/app/user_config" 
 ```
 
 <details>
 
 <summary>How to get your Discord Bot Token and invite your bot (click me)</summary>
 
-[This discordpy guide](https://discordpy.readthedocs.io/en/stable/discord.html#discord-intro) covers creating a bot, getting the token for `DISCORD_TOKEN`, and inviting the bot to your discord server.
+[This discordpy guide](https://discordpy.readthedocs.io/en/stable/discord.html#discord-intro) covers creating a discord bot instance, getting the token to be used as the Docker variable `DISCORD_TOKEN`, and inviting the bot to your discord server.
 
 The below bot permissions should cover current bot abilities. 
 
