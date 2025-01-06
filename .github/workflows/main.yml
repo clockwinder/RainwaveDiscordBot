@@ -6,9 +6,9 @@ on:
     types: [ published ]
 
   # publish on pushes to the main branch (image tagged as "latest")
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
 
 jobs:
   docker_publish:
