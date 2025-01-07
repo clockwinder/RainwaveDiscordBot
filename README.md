@@ -21,7 +21,7 @@ services:
       #- TZ=America/Los_Angeles #Optional, sets timezone for logging
       #- LOG_LEVEL=INFO #Optional, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL
     
-    #The below two lines are optional, uncomment to allow custom configuration files.
+    #The below two lines are optional, uncomment both to allow custom configuration files.
     #volumes:
       #- "/path/to/local/dir:/rainwavediscordbot/app/user_config" 
 ```
