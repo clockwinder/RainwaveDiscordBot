@@ -32,9 +32,6 @@ services:
 
 1. Navigate to the Discord application page here: [https://discord.com/developers/applications](https://discord.com/developers/applications)
 2. Click the "New Application" button:
-
-   ![image](https://github.com/user-attachments/assets/33917ef4-fd18-4197-a079-0c12ab0597a2)
-
 3. Enter application name (this name is not the bots display name, that's adjustable in settings), then accept the contitions and click "Create". I suggest `Rain.Wave`.
 4. You'll be taken to the "General Information" tab for your application, here you can add an "APP ICON" and save. I suggest the [Rain.Wave logo](https://github.com/clockwinder/RainwaveDiscordBot/blob/main/app/data/logo.png).
 5. Navigate to the "Installation" tab and set the "Install Link" dropdown to "None" and save.
