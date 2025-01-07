@@ -32,7 +32,7 @@ services:
 
 1. Navigate to the Discord application page here: [https://discord.com/developers/applications](https://discord.com/developers/applications)
 2. Click the "New Application" button:
-3. Enter application name (this name is not the bots display name, that's adjustable in settings), then accept the contitions and click "Create". I suggest `Rain.Wave`.
+3. Enter application name (this name is not the bots display name, that's adjustable in the config file), then accept the conditions and click "Create". I suggest `Rain.Wave`.
 4. You'll be taken to the "General Information" tab for your application, here you can add an "APP ICON" and save. I suggest the [Rain.Wave logo](https://github.com/clockwinder/RainwaveDiscordBot/blob/main/app/data/logo.png).
 5. Navigate to the "Installation" tab and set the "Install Link" dropdown to "None" and save.
 6. Navigate to the "Bot" tab.
@@ -41,10 +41,11 @@ services:
       * Presence Intent
       * Server Members Intent
       * Message Content Intent
-   3. Click "Reset Token", and confirm, to get your bot token.  Copy your key and paste it in your compose as variable `DISCORD_TOKEN`.
+   3. Save
+   4. Click "Reset Token", and confirm, to get your bot token.  Copy your token and paste it in your compose as variable `DISCORD_TOKEN`.
 7. Navigate to the OAuth2 tab.
    1. Under "OAuth2 URL Generator" tick the "bot" box.
-   2. This opens the "Bot Permissions" options under which you'll select
+   2. This opens the "Bot Permissions" options under which you'll select:
       - General Permissions
         * Change Nickname
         * View Channels
@@ -65,13 +66,10 @@ services:
 
 <summary>How to get your Rainwave ID and Key (click me)</summary>
 
-Login/create account at https://rainwave.cc/
-
-Navigate to https://rainwave.cc/keys/
-
-The `numeric user ID` is your docker `RAINWAVE_ID`
-
-The `API Key` is your docker `RAINWAVE_KEY`
+1. Login/create account at https://rainwave.cc/
+2. Navigate to https://rainwave.cc/keys/
+   * The `numeric user ID` is your docker `RAINWAVE_ID`
+   * The `API Key` is your docker `RAINWAVE_KEY`
 
 </details>
 
