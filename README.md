@@ -21,7 +21,7 @@ services:
       #- TZ=America/Los_Angeles #Optional, sets timezone for logging
       #- LOG_LEVEL=INFO #Optional, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL
     
-    #The below two lines are optional, uncomment to allow custom configuration files.
+    #The below two lines are optional, uncomment both to allow custom configuration files.
     #volumes:
       #- "/path/to/local/dir:/rainwavediscordbot/app/user_config" 
 ```
@@ -30,12 +30,35 @@ services:
 
 <summary>How to get your Discord Bot Token and invite your bot (click me)</summary>
 
-[This discordpy guide](https://discordpy.readthedocs.io/en/stable/discord.html#discord-intro) covers creating a discord bot instance, getting the token to be used as the Docker variable `DISCORD_TOKEN`, and inviting the bot to your discord server.
-
-The below bot permissions should cover current bot abilities. 
-
-![image](https://github.com/user-attachments/assets/48d5c0ac-8b60-4577-85e9-3d67eb2e737f)
-
+1. Navigate to the Discord application page here: [https://discord.com/developers/applications](https://discord.com/developers/applications)
+2. Click the "New Application" button:
+3. Enter application name (this name is not the bots display name, that's adjustable in the config file), then accept the conditions and click "Create". I suggest `Rain.Wave`.
+4. You'll be taken to the "General Information" tab for your application, here you can add an "APP ICON" and save. I suggest the [Rain.Wave logo](https://github.com/clockwinder/RainwaveDiscordBot/blob/main/app/data/logo.png).
+5. Navigate to the "Installation" tab and set the "Install Link" dropdown to "None" and save.
+6. Navigate to the "Bot" tab.
+   1. Disable "Public Bot" (Rain.Wave bot is currently written as a single server bot)
+   2. Under "Privileged Gateway Intents" enable: 
+      * Presence Intent
+      * Server Members Intent
+      * Message Content Intent
+   3. Save
+   4. Click "Reset Token", and confirm, to get your bot token.  Copy your token and paste it in your compose as variable `DISCORD_TOKEN`.
+7. Navigate to the OAuth2 tab.
+   1. Under "OAuth2 URL Generator" tick the "bot" box.
+   2. This opens the "Bot Permissions" options under which you'll select:
+      - General Permissions
+        * Change Nickname
+        * View Channels
+      - Text Permissions
+        * Send Messages
+        * Manage Messages
+        * Embed Links
+        * Read Message History
+        * Add Reactions
+      - Voice Permissions
+        * Connect
+        * Speak
+    3. Copy the contents of "Generated URL" and navigate to it in your browser.  This should cause discord (in app or browser) to prompt you to invite the bot to a server.
 
 </details>
 
@@ -43,13 +66,10 @@ The below bot permissions should cover current bot abilities.
 
 <summary>How to get your Rainwave ID and Key (click me)</summary>
 
-Login/create account at https://rainwave.cc/
-
-Navigate to https://rainwave.cc/keys/
-
-The `numeric user ID` is your docker `RAINWAVE_ID`
-
-The `API Key` is your docker `RAINWAVE_KEY`
+1. Login/create account at https://rainwave.cc/
+2. Navigate to https://rainwave.cc/keys/
+   * The `numeric user ID` is your docker `RAINWAVE_ID`
+   * The `API Key` is your docker `RAINWAVE_KEY`
 
 </details>
 
