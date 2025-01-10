@@ -3,17 +3,21 @@ RainwaveDiscordBot is currently in testing, and should not be used!
 
 Rain.Wave Discord Bot is a self hostable Discord Bot which allows live music from [rainwave.cc](https://rainwave.cc) to be played in voice channels.  It utilizes the [discord.py](https://github.com/Rapptz/discord.py) API wrapper and [Python Rainwave Client](https://github.com/williamjacksn/python-rainwave-client). The appearance of messages and functionality of the bot are configurable.
 
+| ![image](https://github.com/user-attachments/assets/adb7e814-5999-4b10-9d1b-a37e24ad6290 "Example of Rain.Wave Discord Bot in operation with default appearance") |
+| --- |
+| *Example of Rain.Wave Discord Bot in operation with default appearance* |
+
 Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server to try it out!
 
 ## Install
-
-Docker Compose Example:
+### Docker Compose Example:
+> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with write permissions for your intended user.
 ```yaml
 services:
   rainwavediscordbot:
     container_name: rainwavediscordbot
-    image: dockerhub?
-    #user: 1000:100 #Optional #NOTE not currently functional, but intended
+    image: ghcr.io/clockwinder/rainwavediscordbot:latest
+    #user: 1000:100 #Optional
     environment:
       - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
       - RAINWAVE_ID=12345
