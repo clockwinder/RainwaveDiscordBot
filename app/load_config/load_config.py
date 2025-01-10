@@ -14,7 +14,7 @@ USER_CONFIG_MESSAGE = "#This is the user config file, changes to this file are p
 
 class config:
     def __init__(self, startingPath):
-        with open(startingPath+DEFAULT_CONFIG_PATH, "r+") as openDefaultFile: 
+        with open(startingPath+DEFAULT_CONFIG_PATH, "r") as openDefaultFile: 
         #NOTE this section fails on windows: `UnicodeDecodeError: 'charmap' codec can't decode byte 0x90 in position 1992: character maps to <undefined>` 
         #which can be fixed with `encoding='utf-8'` or by adding a windows environmental variable `PYTHONUTF8` with a value of `1`
             if os.path.isdir(startingPath+USER_CONFIG_FOLDER) is False: #Create /user_config if it doesn't exist
