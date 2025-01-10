@@ -11,12 +11,13 @@ Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server t
 
 ## Install
 ### Docker Compose Example:
+> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with write permissions for your intended user.
 ```yaml
 services:
   rainwavediscordbot:
     container_name: rainwavediscordbot
     image: dockerhub?
-    #user: 1000:100 #Optional #NOTE not currently functional, but intended
+    #user: 1000:100 #Optional
     environment:
       - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
       - RAINWAVE_ID=12345
@@ -28,8 +29,6 @@ services:
     #volumes:
       #- "/path/to/local/dir:/rainwavediscordbot/app/user_config" 
 ```
-
-> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with write permissions for your intended user.
 
 <details>
 
