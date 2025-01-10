@@ -16,7 +16,7 @@ Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server t
 services:
   rainwavediscordbot:
     container_name: rainwavediscordbot
-    image: dockerhub?
+    image: ghcr.io/clockwinder/rainwavediscordbot:latest
     #user: 1000:100 #Optional
     environment:
       - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
