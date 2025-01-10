@@ -23,7 +23,7 @@ services:
     
     #The below two lines are optional, uncomment both to allow custom configuration files.
     #volumes:
-      #- "/path/to/local/dir:/rainwavediscordbot/app/user_config" 
+      #- /path/to/local/dir:/rainwavediscordbot/app/user_config
 ```
 
 <details>
