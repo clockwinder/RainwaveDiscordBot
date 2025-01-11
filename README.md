@@ -11,7 +11,7 @@ Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server t
 
 ## Install
 ### Docker Compose Example:
-> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with write permissions for your intended user.
+> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with write permissions for your intended user **before first run**.
 ```yaml
 services:
   rainwavediscordbot:
@@ -19,9 +19,9 @@ services:
     image: ghcr.io/clockwinder/rainwavediscordbot:latest
     #user: 1000:100 #Optional
     environment:
-      - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ
-      - RAINWAVE_ID=12345
-      - RAINWAVE_KEY=12345abcde
+      - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ #Required, replace me
+      - RAINWAVE_ID=12345 #Required, replace me
+      - RAINWAVE_KEY=12345abcde #Required, replace me
       #- TZ=America/Los_Angeles #Optional, sets timezone for logging
       #- LOG_LEVEL=INFO #Optional, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL
     
