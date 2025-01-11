@@ -1,7 +1,7 @@
 ﻿# Rain.Wave Discord Bot
 RainwaveDiscordBot is currently in testing, and should not be used!
 
-Rain.Wave Discord Bot is a self hostable Discord Bot which allows live music from [rainwave.cc](https://rainwave.cc) to be played in voice channels.  It utilizes the [discord.py](https://github.com/Rapptz/discord.py) API wrapper and [Python Rainwave Client](https://github.com/williamjacksn/python-rainwave-client). The appearance of messages and functionality of the bot are configurable.
+Rain.Wave Discord Bot is a self hostable Discord Bot which allows music from [rainwave.cc](https://rainwave.cc) streams to be played in voice channels.  It utilizes the [discord.py](https://github.com/Rapptz/discord.py) API wrapper and [Python Rainwave Client](https://github.com/williamjacksn/python-rainwave-client). The appearance of messages and functionality of the bot are configurable.
 
 | ![image](https://github.com/user-attachments/assets/adb7e814-5999-4b10-9d1b-a37e24ad6290 "Example of Rain.Wave Discord Bot in operation with default appearance") |
 | --- |
