@@ -79,9 +79,9 @@ services:
 
 ## Customization
 
-The options found in your user_config/userconfig.yaml file can be modified to customize the functionality of the bot.  Just change the values of a given item to customize how the bot looks and behaves, then restart the container to see those changes.
+The options found in your user_config/userconfig.yaml file can be modified to customize the functionality and appearance of the bot.  Just change the values of a given item, then restart the container to see those changes.
 
-Here are the customization options in the userconfig.yaml file:
+Here are the customization options available in the userconfig.yaml file:
 
 ```yaml
 botChannels:
