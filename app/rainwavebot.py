@@ -20,6 +20,7 @@ import load_config.load_config
 
 #Global Constants
 MINIMUM_REFRESH_DELAY = 6
+PROJECT_HOME_PAGE = "https://github.com/clockwinder/RainwaveDiscordBot"
 
 #Load Config
 config = load_config.load_config.config(os.path.dirname(os.path.abspath(__file__)))
@@ -36,7 +37,7 @@ intents.members = True
 
 #Create Bot instance w/ settings
 bot = commands.Bot(command_prefix=config["botPrefix"], 
-    description=f"rainwave.cc bot, in development by Roach\nUse `{config["botPrefix"]}play` to get started", intents=intents)
+    description=f"Rain.Wave is a self hostable rainwave.cc music bot.\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}", intents=intents)
 
 class current:
     voiceChannel = None
@@ -146,6 +147,7 @@ def nowPlayingEmbed(metaData, stopping=False):
             url=current.selectedStream.url, 
             description=generateProgressBar(metaData, stopping), 
             color = discord.Colour.from_rgb(config["embedColor"][0],config["embedColor"][1],config["embedColor"][2]))
+        #embed.set_author(name=f"About Rain.Wave Bot", url=PROJECT_HOME_PAGE, icon_url="attachment://logo.png")
         if metaData.url:
             artistData = f"[{metaData.artist_string}]({metaData.url})"
         else:
@@ -153,7 +155,7 @@ def nowPlayingEmbed(metaData, stopping=False):
         embed.add_field(name=f"{metaData.title} ", 
             value=f"From - [{metaData.album.name}]({current.selectedStream.schedule_current.song.album.url})\nBy - {artistData}", inline=False)
         embed.set_thumbnail(url=metaData.album.art)
-        embed.set_footer(text=f"Sync thread is alive: {syncThreadStatus}", icon_url="attachment://logo.png")
+        embed.set_footer(text=f"Use `{config["botPrefix"]}help` for more info.", icon_url="attachment://logo.png")
     return formatedEmbed
 
 async def validChannelCheck(ctx, checkVoiceChannel = False):
