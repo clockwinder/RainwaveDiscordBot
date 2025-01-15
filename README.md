@@ -1,4 +1,4 @@
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C818NONC) <noscript><a href="https://liberapay.com/Clockwinder/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/clockwinder) <noscript><a href="https://liberapay.com/Clockwinder/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 # Rain.Wave Discord Bot
 RainwaveDiscordBot is currently in testing, and should not be used!
 
