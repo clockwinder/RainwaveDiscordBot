@@ -10,6 +10,8 @@ Rain.Wave Discord Bot is a self hostable Discord Bot which allows music from [ra
 
 Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server to try it out!
 
+[![Discord](https://img.shields.io/discord/1278432123455279195?logo=discord&label=Join%20the%20Rain.Wave%20Discord)](https://discord.gg/2FVBFuFTQfWN)
+
 ## Install
 ### Docker Compose Example:
 
