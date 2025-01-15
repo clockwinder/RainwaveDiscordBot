@@ -13,7 +13,7 @@ Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server t
 ## Install
 ### Docker Compose Example:
 
-> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with write permissions for your intended user **before first run**.
+> ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with read and write permissions for your intended user **before first run**.
 ```yaml
 services:
   rainwavediscordbot:
