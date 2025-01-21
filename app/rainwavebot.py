@@ -38,7 +38,7 @@ intents.members = True
 
 #Create Bot instance w/ settings
 bot = commands.Bot(command_prefix=config["botPrefix"], 
-    description=f"Rain.Wave is a self hostable rainwave.cc music bot.\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}\n{VERSION_NUMBER}", intents=intents)
+    description=f"Rain.Wave is a self hostable rainwave.cc music bot.\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}\nVersion: {VERSION_NUMBER}", intents=intents)
 
 class current:
     voiceChannel = None
@@ -233,7 +233,7 @@ async def on_ready():
     current_time = now.strftime("%H:%M:%S")
     opusStatus = loadOpus()
     await bot.user.edit(username=config["botName"])
-    loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
+    loginReport = f'Logged into Discord as `{bot.user} (ID: {bot.user.id} Version: {VERSION_NUMBER})` and Rainwave as `(ID: {rainwaveClient.user_id})` at `{current_time}` on `{current_day}`'
     logger.info(loginReport)
     logger.debug(f"Opus: {opusStatus}")
     if config["enableLogChannel"]:
