@@ -38,7 +38,7 @@ intents.members = True
 
 #Create Bot instance w/ settings
 bot = commands.Bot(command_prefix=config["botPrefix"], 
-    description=f"Rain.Wave is a self hostable rainwave.cc music bot. {VERSION_NUMBER}\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}", intents=intents)
+    description=f"Rain.Wave is a self hostable rainwave.cc music bot.\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}\n{VERSION_NUMBER}", intents=intents)
 
 class current:
     voiceChannel = None
