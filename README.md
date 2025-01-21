@@ -8,7 +8,7 @@ Rain.Wave Discord Bot is a self hostable Discord Bot which allows music from [ra
 | --- |
 | *Examples of Rain.Wave Discord Bot in operation with default appearance* |
 
-Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server to try it out!
+Join the [Rain.Wave Discord Bot discord server](https://discord.gg/VBFuFTQfWN) to try it out!
 
 [![Discord](https://img.shields.io/discord/1278432123455279195?logo=discord&label=Join%20the%20Rain.Wave%20Discord)](https://discord.gg/VBFuFTQfWN)
 
@@ -16,12 +16,13 @@ Join the [Rain.Wave Discord Bot](https://discord.gg/VBFuFTQfWN) discord server t
 ### Docker Compose Example:
 
 > ⚠️ If you intend to run the container as a non-root user **AND** want persistent storage for your config file, you must manually create your `/path/to/local/dir` directory with read and write permissions for your intended user **before first run**.
+
 ```yaml
 services:
   rainwavediscordbot:
     container_name: rainwavediscordbot
     image: ghcr.io/clockwinder/rainwavediscordbot:latest
-    #user: 1000:100 #Optional
+    #user: 1000:100 #Optional, runs container as specified user
     environment:
       - DISCORD_TOKEN=F4K3T0K3N_ikb331nmGsvgHPGAv8jwFV3gKFs9eR.nF4lgje68ZdrEX9aSJ #Required, replace me
       - RAINWAVE_ID=12345 #Required, replace me
@@ -36,7 +37,7 @@ services:
 
 <details>
 
-<summary>How to get your Discord Bot Token and invite your bot (click me)</summary>
+<summary>How to get your DISCORD_TOKEN and invite your bot (click me)</summary>
 
 1. Navigate to the Discord application page here: [https://discord.com/developers/applications](https://discord.com/developers/applications)
 2. Click the "New Application" button:
@@ -72,7 +73,7 @@ services:
 
 <details>
 
-<summary>How to get your Rainwave ID and Key (click me)</summary>
+<summary>How to get your RAINWAVE_ID and RAINWAVE_KEY (click me)</summary>
 
 1. Login/create account at https://rainwave.cc/
 2. Navigate to https://rainwave.cc/keys/
@@ -85,7 +86,10 @@ services:
 
 The options found in your user_config/userconfig.yaml file can be modified to customize the functionality and appearance of the bot.  Just change the values of a given item, then restart the container to see those changes.
 
-Here are the customization options available in the userconfig.yaml file:
+
+<details>
+
+<summary>Here is a list of the customization options available in the userconfig.yaml file (click me)</summary>
 
 ```yaml
 botChannels:
@@ -145,3 +149,4 @@ options:
   #Logging level, can be set to DEBUG, INFO, WARNING, ERROR, CRITICAL.  If INFO provides too much info, switch to WARNING
   logLevel: "INFO"
 ```
+</details>
