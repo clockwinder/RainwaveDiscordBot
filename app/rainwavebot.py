@@ -19,6 +19,7 @@ from rainwaveclient import RainwaveClient #NOTE Command to upgrade the rainwavec
 import load_config.load_config
 
 #Global Constants
+VERSION_NUMBER = "v0.5.1"
 MINIMUM_REFRESH_DELAY = 6
 PROJECT_HOME_PAGE = "https://github.com/clockwinder/RainwaveDiscordBot"
 
@@ -37,7 +38,7 @@ intents.members = True
 
 #Create Bot instance w/ settings
 bot = commands.Bot(command_prefix=config["botPrefix"], 
-    description=f"Rain.Wave is a self hostable rainwave.cc music bot.\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}", intents=intents)
+    description=f"Rain.Wave is a self hostable rainwave.cc music bot. {VERSION_NUMBER}\nUse `{config["botPrefix"]}play` to get started.\n\nMore info at {PROJECT_HOME_PAGE}", intents=intents)
 
 class current:
     voiceChannel = None
