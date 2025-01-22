@@ -67,7 +67,7 @@ services:
       - Voice Permissions
         * Connect
         * Speak
-    3. Copy the contents of "Generated URL" and navigate to it in your browser.  This should cause discord (in app or browser) to prompt you to invite the bot to a server.
+    3. Copy the contents of "Generated URL" and navigate to it in your browser.  This should cause discord (in app or browser) to prompt you to invite the bot to a server. From the drop down choose the server in which you want the bot, and click continue, then click authorize.
 
 </details>
 
