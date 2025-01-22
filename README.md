@@ -1,7 +1,5 @@
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/clockwinder) <noscript><a href="https://liberapay.com/Clockwinder/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+﻿[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/clockwinder) <noscript><a href="https://liberapay.com/Clockwinder/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
 # Rain.Wave Discord Bot
-RainwaveDiscordBot is currently in testing, and should not be used!
-
 Rain.Wave Discord Bot is a self hostable Discord Bot which allows music from [rainwave.cc](https://rainwave.cc) streams to be played in voice channels.  It utilizes the [discord.py](https://github.com/Rapptz/discord.py) API wrapper and [Python Rainwave Client](https://github.com/williamjacksn/python-rainwave-client). The appearance of messages and functionality of the bot are configurable.
 
 | ![example](https://github.com/user-attachments/assets/edece0ce-544e-4c69-a2f6-af736edaaae4) |
