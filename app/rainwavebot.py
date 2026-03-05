@@ -19,7 +19,7 @@ from rainwaveclient import RainwaveClient #NOTE Command to upgrade the rainwavec
 import load_config.load_config
 
 #Global Constants
-VERSION_NUMBER = "v1.0.2"
+VERSION_NUMBER = "v1.0.3"
 MINIMUM_REFRESH_DELAY = 6
 PROJECT_HOME_PAGE = "https://github.com/clockwinder/RainwaveDiscordBot"
 
