@@ -2,7 +2,7 @@
 
 #The first three were found using `pipreqs`, is that a good choice?  It did miss PyNaCl.
 aiocron==2.1 #Required for discord.py, bumped from 1.8
-discord.py==2.7.1 #Bumped from 2.6.0
+discord.py[voice]==2.7.1 #Bumped from discord.py==2.6.0
 python_rainwave_client==2024.3 #bumped from 2024.2
 PyNaCl==1.5.0 #I got this by using `pip show pynacl`. If I hadn't known what would I do?
 PyYAML==6.0.2 #Allows reading Yamls
